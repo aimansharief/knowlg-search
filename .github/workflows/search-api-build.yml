@@ -77,3 +77,10 @@ jobs:
         with:
           name: test-results
           path: ~/test-results
+
+build-then-test:
+  jobs:
+    - build
+    - unit-tests:
+        requires:
+          - build
