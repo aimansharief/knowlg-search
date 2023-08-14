@@ -38,7 +38,7 @@ jobs:
           key: kp-dependency-build-cache-${{ hashFiles('pom.xml') }}
 
   unit-tests:
-    needs: [jobs]
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
