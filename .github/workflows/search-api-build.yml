@@ -1,0 +1,87 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: 14
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: kp-dependency-build-cache-${{ hashFiles('pom.xml') }}
+
+      - name: Change directory
+        run: cd search-api
+
+      - name: Build the project
+        run: |
+          mvn clean install -DskipTests
+
+      - name: Store Maven dependencies cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: kp-dependency-build-cache-${{ hashFiles('pom.xml') }}
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Change directory
+        run: cd search-api
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: 14
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: kp-dependency-test-cache-${{ hashFiles('pom.xml') }}
+
+      - name: Setup environment and run tests
+        run: bash vmsetup.sh
+
+      - name: Save test results
+        run: |
+          mkdir -p ~/test-results/junit/
+          find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
+        if: always()
+
+      - name: Store Maven dependencies cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: kp-dependency-test-cache-${{ hashFiles('pom.xml') }}
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: ~/test-results
+
+workflows:
+  version: 2
+  build-then-test:
+    jobs:
+      - build
+      - unit-tests:
+          requires:
+            - build
