@@ -16,6 +16,8 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: 14
+          distribution: 'adopt'
+          architecture: x64
 
       - name: Cache Maven dependencies
         uses: actions/cache@v2
