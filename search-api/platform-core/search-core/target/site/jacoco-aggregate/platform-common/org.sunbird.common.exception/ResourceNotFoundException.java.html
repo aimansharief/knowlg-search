@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>ResourceNotFoundException.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">search-core</a> &gt; <a href="../index.html" class="el_bundle">platform-common</a> &gt; <a href="index.source.html" class="el_package">org.sunbird.common.exception</a> &gt; <span class="el_source">ResourceNotFoundException.java</span></div><h1>ResourceNotFoundException.java</h1><pre class="source lang-java linenums">package org.sunbird.common.exception;
+
+public class ResourceNotFoundException extends MiddlewareException {
+
+    private static final long serialVersionUID = 5170597108192700962L;
+	private String identifier;
+
+	public ResourceNotFoundException(String errCode, String message) {
+<span class="nc" id="L9">        super(errCode, message);</span>
+<span class="nc" id="L10">    }</span>
+
+	public ResourceNotFoundException(String errCode, String message, String identifier) {
+<span class="nc" id="L13">		super(errCode, message);</span>
+<span class="nc" id="L14">		this.identifier = identifier;</span>
+<span class="nc" id="L15">	}</span>
+
+    public ResourceNotFoundException(String errCode, String message, Object... params) {
+<span class="nc" id="L18">        super(errCode, message, params);</span>
+<span class="nc" id="L19">    }</span>
+
+    public ResourceNotFoundException(String errCode, String message, Throwable root) {
+<span class="nc" id="L22">        super(errCode, message, root);</span>
+<span class="nc" id="L23">    }</span>
+
+    public ResourceNotFoundException(String errCode, String message, Throwable root, Object... params) {
+<span class="nc" id="L26">        super(errCode, message, root, params);</span>
+<span class="nc" id="L27">    }</span>
+
+    public ResponseCode getResponseCode() {
+<span class="nc" id="L30">        return ResponseCode.RESOURCE_NOT_FOUND;</span>
+    }
+
+	/**
+	 * @return the identifier
+	 */
+	public String getIdentifier() {
+<span class="nc" id="L37">		return identifier;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

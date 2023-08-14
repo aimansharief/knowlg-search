@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>TelemetryAccessEventUtil.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">search-core</a> &gt; <a href="../index.html" class="el_bundle">platform-telemetry</a> &gt; <a href="index.source.html" class="el_package">org.sunbird.telemetry.util</a> &gt; <span class="el_source">TelemetryAccessEventUtil.java</span></div><h1>TelemetryAccessEventUtil.java</h1><pre class="source lang-java linenums">package org.sunbird.telemetry.util;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
+import org.sunbird.common.Platform;
+import org.sunbird.common.dto.Request;
+import org.sunbird.common.dto.Response;
+import org.sunbird.telemetry.TelemetryParams;
+import org.sunbird.telemetry.logger.TelemetryManager;
+
+import java.util.HashMap;
+import java.util.Map;
+
+<span class="nc" id="L14">public class TelemetryAccessEventUtil {</span>
+
+<span class="nc" id="L16">	protected static ObjectMapper mapper = new ObjectMapper();</span>
+
+	public static void writeTelemetryEventLog(Map&lt;String, Object&gt; data) {
+<span class="nc bnc" id="L19" title="All 2 branches missed.">		if (data != null) {</span>
+<span class="nc" id="L20">			long timeDuration = System.currentTimeMillis() - (long) data.get(&quot;StartTime&quot;);</span>
+<span class="nc" id="L21">			Request request = (Request) data.get(&quot;Request&quot;);</span>
+<span class="nc" id="L22">			Response response = (Response) data.get(&quot;Response&quot;);</span>
+
+<span class="nc" id="L24">			Map&lt;String, Object&gt; params = new HashMap&lt;String, Object&gt;();</span>
+<span class="nc bnc" id="L25" title="All 2 branches missed.">			if(null != response)</span>
+<span class="nc" id="L26">				params.put(&quot;rid&quot;, response.getId());</span>
+<span class="nc" id="L27">			params.put(&quot;uip&quot;, (String) data.get(&quot;RemoteAddress&quot;));</span>
+<span class="nc" id="L28">			params.put(&quot;url&quot;, (String) data.get(&quot;path&quot;));</span>
+<span class="nc" id="L29">			params.put(&quot;size&quot;, (long) data.get(&quot;ContentLength&quot;));</span>
+<span class="nc" id="L30">			params.put(&quot;duration&quot;, timeDuration);</span>
+<span class="nc" id="L31">			params.put(&quot;status&quot;, (int) data.get(&quot;Status&quot;));</span>
+<span class="nc" id="L32">			params.put(&quot;protocol&quot;, data.get(&quot;Protocol&quot;));</span>
+<span class="nc" id="L33">			params.put(&quot;method&quot;, (String) data.get(&quot;Method&quot;));</span>
+<span class="nc bnc" id="L34" title="All 2 branches missed.">			if (null != request) {</span>
+<span class="nc" id="L35">				params.put(&quot;req&quot;, getRequestString(request));</span>
+			}
+
+<span class="nc" id="L38">			Map&lt;String, String&gt; context = new HashMap&lt;String, String&gt;();</span>
+<span class="nc" id="L39">			Map&lt;String, Object&gt; fwApis = getFrameworkAPIs();</span>
+<span class="nc bnc" id="L40" title="All 4 branches missed.">			if (null!= response &amp;&amp; fwApis.containsKey(response.getId()))</span>
+<span class="nc" id="L41">				context.put(TelemetryParams.ENV.name(), (String) fwApis.get(response.getId()));</span>
+			else
+<span class="nc" id="L43">				context.put(TelemetryParams.ENV.name(), (String) data.get(&quot;env&quot;));</span>
+//			ExecutionContext.getCurrent().getGlobalContext().put(TelemetryParams.ENV.name(), (String) data.get(&quot;env&quot;));
+<span class="nc" id="L45">			context.put(TelemetryParams.CHANNEL.name(),</span>
+<span class="nc" id="L46">					Platform.getString(&quot;channel.default&quot;, &quot;in.ekstep&quot;));</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">			if (null != data.get(&quot;X-Session-ID&quot;)) {</span>
+<span class="nc" id="L48">				context.put(&quot;sid&quot;, (String) data.get(&quot;X-Session-ID&quot;));</span>
+<span class="nc bnc" id="L49" title="All 4 branches missed.">			} else if (null != request &amp;&amp; null != request.getParams()) {</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">				if (null != request.getParams().getSid()) {</span>
+<span class="nc" id="L51">					context.put(&quot;sid&quot;, request.getParams().getSid());</span>
+				}
+			}
+<span class="nc bnc" id="L54" title="All 2 branches missed.">			if (null != data.get(&quot;X-Consumer-ID&quot;)) {</span>
+<span class="nc" id="L55">				String consumerId = (String) data.get(&quot;X-Consumer-ID&quot;);</span>
+<span class="nc" id="L56">				context.put(TelemetryParams.ACTOR.name(), consumerId);</span>
+//				ExecutionContext.getCurrent().getGlobalContext().put(TelemetryParams.ACTOR.name(), consumerId);
+<span class="nc bnc" id="L58" title="All 4 branches missed.">			} else if (null != request &amp;&amp; null != request.getParams()) {</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">				if (null != request.getParams().getCid()) {</span>
+<span class="nc" id="L60">					String consumerId = request.getParams().getCid();</span>
+<span class="nc" id="L61">					context.put(TelemetryParams.ACTOR.name(), consumerId);</span>
+//					ExecutionContext.getCurrent().getGlobalContext().put(TelemetryParams.ACTOR.name(), consumerId);
+				}
+			}
+<span class="nc bnc" id="L65" title="All 2 branches missed.">			if (null != data.get(&quot;X-Device-ID&quot;)) {</span>
+<span class="nc" id="L66">				context.put(&quot;did&quot;, (String) data.get(&quot;X-Device-ID&quot;));</span>
+<span class="nc bnc" id="L67" title="All 4 branches missed.">			} else if (null != request &amp;&amp; null != request.getParams()) {</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">				if (null != request.getParams().getDid()) {</span>
+<span class="nc" id="L69">					context.put(&quot;did&quot;, request.getParams().getDid());</span>
+				}
+			}
+<span class="nc bnc" id="L72" title="All 2 branches missed.">			if (null != data.get(&quot;X-Authenticated-Userid&quot;)) {</span>
+<span class="nc" id="L73">				context.put(&quot;uid&quot;, (String) data.get(&quot;X-Authenticated-Userid&quot;));</span>
+<span class="nc bnc" id="L74" title="All 4 branches missed.">			} else if (null != request &amp;&amp; null != request.getParams()) {</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">				if (null != request.getParams().getUid()) {</span>
+<span class="nc" id="L76">					context.put(&quot;uid&quot;, request.getParams().getUid());</span>
+				}
+			}
+<span class="nc bnc" id="L79" title="All 2 branches missed.">			if (StringUtils.isNotBlank((String) data.get(&quot;APP_ID&quot;)))</span>
+<span class="nc" id="L80">				context.put(&quot;APP_ID&quot;, (String) data.get(&quot;APP_ID&quot;));</span>
+<span class="nc" id="L81">			TelemetryManager.access(context, params);</span>
+		}
+
+<span class="nc" id="L84">	}</span>
+
+	/**
+	 * @return
+	 */
+	private static Map&lt;String, Object&gt; getFrameworkAPIs() {
+<span class="nc" id="L90">		Map&lt;String, Object&gt; apis = new HashMap&lt;String, Object&gt;();</span>
+
+<span class="nc" id="L92">		apis.put(&quot;ekstep.learning.categoryinstance.create&quot;, &quot;categoryinstance&quot;);</span>
+<span class="nc" id="L93">		apis.put(&quot;ekstep.learning.categoryinstance.read&quot;, &quot;categoryinstance&quot;);</span>
+<span class="nc" id="L94">		apis.put(&quot;ekstep.learning.categoryinstance.update&quot;, &quot;categoryinstance&quot;);</span>
+<span class="nc" id="L95">		apis.put(&quot;ekstep.learning.categoryinstance.search&quot;, &quot;categoryinstance&quot;);</span>
+<span class="nc" id="L96">		apis.put(&quot;ekstep.learning.categoryinstance.retire&quot;, &quot;categoryinstance&quot;);</span>
+
+<span class="nc" id="L98">		apis.put(&quot;ekstep.learning.category.term.create&quot;, &quot;term&quot;);</span>
+<span class="nc" id="L99">		apis.put(&quot;ekstep.learning.category.term.read&quot;, &quot;term&quot;);</span>
+<span class="nc" id="L100">		apis.put(&quot;ekstep.learning.category.term.update&quot;, &quot;term&quot;);</span>
+<span class="nc" id="L101">		apis.put(&quot;ekstep.learning.category.term.search&quot;, &quot;term&quot;);</span>
+<span class="nc" id="L102">		apis.put(&quot;ekstep.learning.category.term.retire&quot;, &quot;term&quot;);</span>
+
+<span class="nc" id="L104">		apis.put(&quot;ekstep.learning.framework.term.create&quot;, &quot;term&quot;);</span>
+<span class="nc" id="L105">		apis.put(&quot;ekstep.learning.framework.term.read&quot;, &quot;term&quot;);</span>
+<span class="nc" id="L106">		apis.put(&quot;ekstep.learning.framework.term.update&quot;, &quot;term&quot;);</span>
+<span class="nc" id="L107">		apis.put(&quot;ekstep.learning.framework.term.search&quot;, &quot;term&quot;);</span>
+<span class="nc" id="L108">		apis.put(&quot;ekstep.learning.framework.term.retire&quot;, &quot;term&quot;);</span>
+
+<span class="nc" id="L110">		apis.put(&quot;ekstep.learning.channel.term.create&quot;, &quot;term&quot;);</span>
+<span class="nc" id="L111">		apis.put(&quot;ekstep.learning.channel.term.read&quot;, &quot;term&quot;);</span>
+<span class="nc" id="L112">		apis.put(&quot;ekstep.learning.channel.term.update&quot;, &quot;term&quot;);</span>
+<span class="nc" id="L113">		apis.put(&quot;ekstep.learning.channel.term.search&quot;, &quot;term&quot;);</span>
+<span class="nc" id="L114">		apis.put(&quot;ekstep.learning.channel.term.retire&quot;, &quot;term&quot;);</span>
+
+<span class="nc" id="L116">		return apis;</span>
+	}
+
+	private static String getRequestString(Request request) {
+		try {
+<span class="nc bnc" id="L121" title="All 2 branches missed.">			int trimLength = Platform.config.hasPath(&quot;learning.telemetry_req_length&quot;) ? Platform.config.getInt(&quot;learning.telemetry_req_length&quot;) : -1;</span>
+<span class="nc" id="L122">			String requestStr = mapper.writeValueAsString(request.getRequest());</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">			if(trimLength &gt;= 0) {</span>
+<span class="nc" id="L124">				requestStr = StringUtils.left(requestStr, trimLength);</span>
+			}
+<span class="nc" id="L126">			return requestStr;</span>
+<span class="nc" id="L127">		} catch (Exception e) {</span>
+<span class="nc" id="L128">			e.printStackTrace();</span>
+		}
+<span class="nc" id="L130">		return null;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

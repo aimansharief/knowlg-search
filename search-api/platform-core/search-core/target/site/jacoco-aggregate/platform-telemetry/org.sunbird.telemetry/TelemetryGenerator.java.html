@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>TelemetryGenerator.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">search-core</a> &gt; <a href="../index.html" class="el_bundle">platform-telemetry</a> &gt; <a href="index.source.html" class="el_package">org.sunbird.telemetry</a> &gt; <span class="el_source">TelemetryGenerator.java</span></div><h1>TelemetryGenerator.java</h1><pre class="source lang-java linenums">package org.sunbird.telemetry;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
+import org.sunbird.common.Platform;
+import org.sunbird.telemetry.dto.Actor;
+import org.sunbird.telemetry.dto.Context;
+import org.sunbird.telemetry.dto.Producer;
+import org.sunbird.telemetry.dto.Target;
+import org.sunbird.telemetry.dto.Telemetry;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+/**
+ * {@link TelemetryGenerator} uses context and other parameters to generate
+ * event JSON in string format.
+ * 
+ * @author Mahesh
+ *
+ */
+<span class="nc" id="L25">public class TelemetryGenerator {</span>
+
+<span class="nc" id="L27">	private static ObjectMapper mapper = new ObjectMapper();</span>
+<span class="nc bnc" id="L28" title="All 2 branches missed.">	private static final String ENVIRONMENT = Platform.config.hasPath(&quot;telemetry_env&quot;)?Platform.config.getString(&quot;telemetry_env&quot;):&quot;dev&quot;;</span>
+<span class="nc bnc" id="L29" title="All 2 branches missed.">	private static final String INSTALLATION_ID = Platform.config.hasPath(&quot;installation.id&quot;)?Platform.config.getString(&quot;installation.id&quot;):&quot;ekstep&quot;;</span>
+<span class="nc" id="L30">	private static final String DEFAULT_PRODUCER_ID = ENVIRONMENT + &quot;.&quot; + INSTALLATION_ID + &quot;.learning.platform&quot;;</span>
+	private static final String PRODUCER_VERSION = &quot;1.0&quot;;
+<span class="nc" id="L32">	private static String PRODUCER_PID = &quot;&quot;;</span>
+
+	public static void setComponent(String component) {
+<span class="nc" id="L35">		PRODUCER_PID = component;</span>
+<span class="nc" id="L36">	}</span>
+
+	/**
+	 * To generate api_access LOG telemetry JSON string.
+	 * 
+	 * @param context
+	 * @param params
+	 * @return
+	 */
+	public static String access(Map&lt;String, String&gt; context, Map&lt;String, Object&gt; params) {
+<span class="nc" id="L46">		Actor actor = getActor(context);</span>
+<span class="nc" id="L47">		Context eventContext = getContext(context);</span>
+<span class="nc" id="L48">		Map&lt;String, Object&gt; edata = new HashMap&lt;String, Object&gt;();</span>
+<span class="nc" id="L49">		edata.put(&quot;type&quot;, &quot;api_access&quot;);</span>
+<span class="nc" id="L50">		edata.put(&quot;level&quot;, &quot;INFO&quot;);</span>
+<span class="nc" id="L51">		edata.put(&quot;message&quot;, &quot;&quot;);</span>
+<span class="nc" id="L52">		edata.put(&quot;params&quot;, getParamsList(params));</span>
+<span class="nc" id="L53">		Telemetry telemetry = new Telemetry(&quot;LOG&quot;, actor, eventContext, edata);</span>
+<span class="nc" id="L54">		return getTelemetry(telemetry);</span>
+	}
+
+	/**
+	 * To generate normal LOG telemetry JSON string with all params.
+	 * 
+	 * @param context
+	 * @param type
+	 * @param level
+	 * @param message
+	 * @param pageid
+	 * @param params
+	 * @return
+	 */
+	public static String log(Map&lt;String, String&gt; context, String type, String level, String message, String pageid,
+			Map&lt;String, Object&gt; params) {
+<span class="nc" id="L70">		Actor actor = getActor(context);</span>
+<span class="nc" id="L71">		Context eventContext = getContext(context);</span>
+<span class="nc" id="L72">		Map&lt;String, Object&gt; edata = new HashMap&lt;String, Object&gt;();</span>
+<span class="nc" id="L73">		edata.put(&quot;type&quot;, type);</span>
+<span class="nc" id="L74">		edata.put(&quot;level&quot;, level);</span>
+<span class="nc" id="L75">		edata.put(&quot;message&quot;, message);</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">		if (StringUtils.isNotBlank(pageid))</span>
+<span class="nc" id="L77">			edata.put(&quot;pageid&quot;, pageid);</span>
+<span class="nc bnc" id="L78" title="All 4 branches missed.">		if (null != params &amp;&amp; !params.isEmpty())</span>
+<span class="nc" id="L79">			edata.put(&quot;params&quot;, getParamsList(params));</span>
+<span class="nc" id="L80">		Telemetry telemetry = new Telemetry(&quot;LOG&quot;, actor, eventContext, edata);</span>
+<span class="nc" id="L81">		return getTelemetry(telemetry);</span>
+	}
+
+	/**
+	 * To generate normal LOG telemetry JSON string with required params.
+	 * 
+	 * @param context
+	 * @param type
+	 * @param level
+	 * @param message
+	 * @return
+	 */
+	public static String log(Map&lt;String, String&gt; context, String type, String level, String message) {
+<span class="nc" id="L94">		return log(context, type, level, message, null, null);</span>
+	}
+
+	/**
+	 * To generate ERROR telemetry JSON string with all params.
+	 * 
+	 * @param context
+	 * @param code
+	 * @param type
+	 * @param stacktrace
+	 * @param pageid
+	 * @param object
+	 * @return
+	 */
+	public static String error(Map&lt;String, String&gt; context, String code, String type, String stacktrace, String pageid,
+			Object object) {
+<span class="nc" id="L110">		Actor actor = getActor(context);</span>
+<span class="nc" id="L111">		Context eventContext = getContext(context);</span>
+<span class="nc" id="L112">		Map&lt;String, Object&gt; edata = new HashMap&lt;String, Object&gt;();</span>
+<span class="nc" id="L113">		edata.put(&quot;err&quot;, code);</span>
+<span class="nc" id="L114">		edata.put(&quot;errtype&quot;, type);</span>
+<span class="nc" id="L115">		edata.put(&quot;stacktrace&quot;, stacktrace);</span>
+<span class="nc bnc" id="L116" title="All 2 branches missed.">		if (StringUtils.isNotBlank(pageid))</span>
+<span class="nc" id="L117">			edata.put(&quot;pageid&quot;, pageid);</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">		if (null != object)</span>
+<span class="nc" id="L119">			edata.put(&quot;object&quot;, object);</span>
+<span class="nc" id="L120">		Telemetry telemetry = new Telemetry(&quot;ERROR&quot;, actor, eventContext, edata);</span>
+<span class="nc" id="L121">		return getTelemetry(telemetry);</span>
+
+	}
+
+	/**
+	 * To generate ERROR telemetry JSON string with required params.
+	 * 
+	 * @param context
+	 * @param code
+	 * @param type
+	 * @param stacktrace
+	 * @return
+	 */
+	public static String error(Map&lt;String, String&gt; context, String code, String type, String stacktrace) {
+<span class="nc" id="L135">		return error(context, code, type, stacktrace, null, null);</span>
+	}
+
+    /**
+     * @param context
+     * @param query
+     * @param filters
+     * @param sort
+     * @param cData
+     * @param size
+     * @param topN
+     * @param type
+     * @return
+     */
+    public static String search(Map&lt;String, String&gt; context, String query, Object filters, Object sort,
+                                List&lt;Map&lt;String, Object&gt;&gt; cData, int size, Object topN, String type) {
+<span class="nc" id="L151">        Actor actor = getActor(context);</span>
+<span class="nc" id="L152">        Context eventContext = getContext(context);</span>
+<span class="nc" id="L153">        Map&lt;String, Object&gt; edata = new HashMap&lt;String, Object&gt;();</span>
+<span class="nc" id="L154">        edata.put(&quot;type&quot;, type);</span>
+<span class="nc" id="L155">        edata.put(&quot;query&quot;, query);</span>
+<span class="nc" id="L156">        edata.put(&quot;filters&quot;, filters);</span>
+<span class="nc" id="L157">        edata.put(&quot;sort&quot;, sort);</span>
+<span class="nc" id="L158">        edata.put(&quot;size&quot;, size);</span>
+<span class="nc" id="L159">        edata.put(&quot;topn&quot;, topN);</span>
+        Telemetry telemetry;
+<span class="nc bnc" id="L161" title="All 2 branches missed.">        if (null != cData) {</span>
+<span class="nc" id="L162">            telemetry = new Telemetry(&quot;SEARCH&quot;, actor, eventContext, edata, cData);</span>
+        } else {
+<span class="nc" id="L164">            telemetry = new Telemetry(&quot;SEARCH&quot;, actor, eventContext, edata);</span>
+        }
+<span class="nc bnc" id="L166" title="All 4 branches missed.">		if (null != context.get(&quot;objectId&quot;) &amp;&amp; null != context.get(&quot;objectType&quot;)) {</span>
+<span class="nc" id="L167">			Target object = new Target(context.get(&quot;objectId&quot;), context.get(&quot;objectType&quot;));</span>
+<span class="nc" id="L168">			telemetry.setObject(object);</span>
+		}
+<span class="nc" id="L170">        return getTelemetry(telemetry);</span>
+    }
+
+	/**
+	 * @param context
+	 * @param props
+	 * @param state
+	 * @param prevState
+	 * @param cdata
+	 * @return
+	 */
+	public static String audit(Map&lt;String, String&gt; context, List&lt;String&gt; props, String state, String prevState,
+			List&lt;Map&lt;String, Object&gt;&gt; cdata) {
+<span class="nc" id="L183">		Telemetry telemetry = null;</span>
+<span class="nc" id="L184">		Actor actor = getActor(context);</span>
+<span class="nc" id="L185">		Context eventContext = getContext(context);</span>
+<span class="nc" id="L186">		Map&lt;String, Object&gt; edata = new HashMap&lt;String, Object&gt;();</span>
+<span class="nc" id="L187">		edata.put(&quot;props&quot;, props);</span>
+<span class="nc bnc" id="L188" title="All 2 branches missed.">		if (StringUtils.isNotBlank(state))</span>
+<span class="nc" id="L189">			edata.put(&quot;state&quot;, state);</span>
+<span class="nc bnc" id="L190" title="All 2 branches missed.">		if (StringUtils.isNotBlank(prevState))</span>
+<span class="nc" id="L191">			edata.put(&quot;prevstate&quot;, prevState);</span>
+<span class="nc bnc" id="L192" title="All 2 branches missed.">		if(StringUtils.isNotBlank(context.get(&quot;duration&quot;)))</span>
+<span class="nc" id="L193">			edata.put(&quot;duration&quot;,Long.valueOf(context.get(&quot;duration&quot;)));</span>
+<span class="nc bnc" id="L194" title="All 4 branches missed.">		if (null != cdata &amp;&amp; !cdata.isEmpty())</span>
+<span class="nc" id="L195">			telemetry = new Telemetry(&quot;AUDIT&quot;, actor, eventContext, edata, cdata);</span>
+		else
+<span class="nc" id="L197">			telemetry = new Telemetry(&quot;AUDIT&quot;, actor, eventContext, edata);</span>
+<span class="nc" id="L198">		Target object = new Target(context.get(&quot;objectId&quot;), context.get(&quot;objectType&quot;));</span>
+<span class="nc" id="L199">		String pkgVersion = (String) context.get(&quot;pkgVersion&quot;);</span>
+<span class="nc bnc" id="L200" title="All 2 branches missed.">		if (StringUtils.isNotBlank(pkgVersion))</span>
+<span class="nc" id="L201">			object.setVer(pkgVersion);</span>
+<span class="nc" id="L202">		telemetry.setObject(object);</span>
+<span class="nc" id="L203">		return getTelemetry(telemetry);</span>
+	}
+
+	/**
+	 * @param context
+	 * @param props
+	 * @param state
+	 * @param prevState
+	 * @return
+	 */
+	public static String audit(Map&lt;String, String&gt; context, List&lt;String&gt; props, String state, String prevState) {
+<span class="nc" id="L214">		return audit(context, props, state, prevState, null);</span>
+	}
+
+	private static Actor getActor(Map&lt;String, String&gt; context) {
+<span class="nc" id="L218">		String actorId = context.get(TelemetryParams.ACTOR.name());</span>
+<span class="nc bnc" id="L219" title="All 2 branches missed.">		if (StringUtils.isNotBlank(actorId))</span>
+<span class="nc" id="L220">			return new Actor(actorId, &quot;User&quot;);</span>
+
+<span class="nc" id="L222">		return new Actor(&quot;org.sunbird.learning.platform&quot;, &quot;System&quot;);</span>
+
+	}
+
+	private static Context getContext(Map&lt;String, String&gt; context) {
+<span class="nc" id="L227">		String channel = (String) context.get(TelemetryParams.CHANNEL.name());</span>
+<span class="nc" id="L228">		String env = context.get(TelemetryParams.ENV.name());</span>
+<span class="nc" id="L229">		Context eventContext = new Context(channel, env, getProducer(context));</span>
+<span class="nc" id="L230">		String sid = context.get(&quot;sid&quot;);</span>
+<span class="nc bnc" id="L231" title="All 2 branches missed.">		if (StringUtils.isNotBlank(sid))</span>
+<span class="nc" id="L232">			eventContext.setSid(sid);</span>
+<span class="nc" id="L233">		String did = context.get(&quot;did&quot;);</span>
+<span class="nc bnc" id="L234" title="All 2 branches missed.">		if (StringUtils.isNotBlank(did))</span>
+<span class="nc" id="L235">			eventContext.setDid(did);</span>
+
+<span class="nc" id="L237">		return eventContext;</span>
+	}
+
+	/**
+	 * This Method Returns Producer Object for Telemetry Event.
+	 * @param context
+	 * @return Producer
+	 */
+	private static Producer getProducer(Map&lt;String, String&gt; context) {
+<span class="nc" id="L246">		String appId = context.get(TelemetryParams.APP_ID.name());</span>
+<span class="nc bnc" id="L247" title="All 2 branches missed.">		if (StringUtils.isNotBlank(appId))</span>
+<span class="nc" id="L248">			return new Producer(appId, PRODUCER_PID, PRODUCER_VERSION);</span>
+		else
+<span class="nc" id="L250">			return new Producer(DEFAULT_PRODUCER_ID, PRODUCER_PID, PRODUCER_VERSION);</span>
+	}
+
+	private static List&lt;Map&lt;String, Object&gt;&gt; getParamsList(Map&lt;String, Object&gt; params) {
+<span class="nc" id="L254">		List&lt;Map&lt;String, Object&gt;&gt; paramsList = new ArrayList&lt;Map&lt;String, Object&gt;&gt;();</span>
+<span class="nc bnc" id="L255" title="All 4 branches missed.">		if (null != params &amp;&amp; !params.isEmpty()) {</span>
+<span class="nc bnc" id="L256" title="All 2 branches missed.">			for (Entry&lt;String, Object&gt; entry : params.entrySet()) {</span>
+<span class="nc" id="L257">				Map&lt;String, Object&gt; param = new HashMap&lt;String, Object&gt;();</span>
+<span class="nc" id="L258">				param.put(entry.getKey(), entry.getValue());</span>
+<span class="nc" id="L259">				paramsList.add(param);</span>
+<span class="nc" id="L260">			}</span>
+		}
+<span class="nc" id="L262">		return paramsList;</span>
+	}
+
+	private static String getTelemetry(Telemetry telemetry) {
+<span class="nc" id="L266">		String event = &quot;&quot;;</span>
+		try {
+<span class="nc" id="L268">			event = mapper.writeValueAsString(telemetry);</span>
+<span class="nc" id="L269">		} catch (Exception e) {</span>
+<span class="nc" id="L270">			e.printStackTrace();</span>
+<span class="nc" id="L271">		}</span>
+<span class="nc" id="L272">		return event;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

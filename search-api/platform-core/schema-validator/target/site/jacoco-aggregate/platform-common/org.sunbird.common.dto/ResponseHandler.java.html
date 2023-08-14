@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>ResponseHandler.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">schema-validator</a> &gt; <a href="../index.html" class="el_bundle">platform-common</a> &gt; <a href="index.source.html" class="el_package">org.sunbird.common.dto</a> &gt; <span class="el_source">ResponseHandler.java</span></div><h1>ResponseHandler.java</h1><pre class="source lang-java linenums">package org.sunbird.common.dto;
+
+import org.apache.commons.lang3.StringUtils;
+import org.sunbird.common.exception.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+<span class="nc" id="L12">public class ResponseHandler {</span>
+
+    public static Response handleResponses(List&lt;Response&gt; responses) {
+<span class="nc" id="L15">        ResponseCode responseCode = getResponseCode(responses);</span>
+        Response response;
+<span class="nc bnc" id="L17" title="All 2 branches missed.">        if (StringUtils.equals(ResponseCode.OK.name(), responseCode.name()))</span>
+<span class="nc" id="L18">            response = handleSuccessResponse(responseCode, responses);</span>
+        else
+<span class="nc" id="L20">            response = handleErrorResponse(responseCode, responses);</span>
+<span class="nc" id="L21">        return response;</span>
+    }
+
+    private static Response handleErrorResponse(ResponseCode priorityResponseCode, List&lt;Response&gt; responses) {
+<span class="nc" id="L25">        Response finalResponse = new Response();</span>
+<span class="nc" id="L26">        ResponseParams responseParams = new ResponseParams();</span>
+<span class="nc" id="L27">        responseParams.setStatus(ResponseParams.StatusType.failed.name());</span>
+<span class="nc" id="L28">        responseParams.setErr(priorityResponseCode.name());</span>
+<span class="nc" id="L29">        responseParams.setErrmsg(priorityResponseCode.name());</span>
+<span class="nc" id="L30">        finalResponse.setResponseCode(priorityResponseCode);</span>
+<span class="nc" id="L31">        finalResponse.setParams(responseParams);</span>
+<span class="nc" id="L32">        handleUnsuccessfulMessages(finalResponse, responses);</span>
+<span class="nc" id="L33">        handleSuccessfulMessages(finalResponse, responses);</span>
+<span class="nc" id="L34">        return finalResponse;</span>
+    }
+
+
+    private static Response handleSuccessResponse(ResponseCode priorityResponseCode, List&lt;Response&gt; responses) {
+<span class="nc" id="L39">        Response finalResponse = new Response();</span>
+<span class="nc" id="L40">        ResponseParams responseParams = new ResponseParams();</span>
+<span class="nc" id="L41">        responseParams.setStatus(ResponseParams.StatusType.successful.name());</span>
+<span class="nc" id="L42">        finalResponse.setResponseCode(priorityResponseCode);</span>
+<span class="nc" id="L43">        finalResponse.setParams(responseParams);</span>
+<span class="nc" id="L44">        handleSuccessfulMessages(finalResponse, responses);</span>
+<span class="nc" id="L45">        return finalResponse;</span>
+    }
+
+    private static ResponseCode getResponseCode(List&lt;Response&gt; responses) {
+<span class="nc" id="L49">        List&lt;ResponseCode&gt; responseCodes = responses.stream().map(response -&gt; response.getResponseCode()).collect(Collectors.toList());</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        if (responseCodes.contains(ResponseCode.SERVER_ERROR))</span>
+<span class="nc" id="L51">            return ResponseCode.SERVER_ERROR;</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        if (responseCodes.contains(ResponseCode.PARTIAL_SUCCESS))</span>
+<span class="nc" id="L53">            return ResponseCode.PARTIAL_SUCCESS;</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        if (responseCodes.contains(ResponseCode.CLIENT_ERROR))</span>
+<span class="nc" id="L55">            return ResponseCode.CLIENT_ERROR;</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        if (responseCodes.contains(ResponseCode.RESOURCE_NOT_FOUND))</span>
+<span class="nc" id="L57">            return ResponseCode.RESOURCE_NOT_FOUND;</span>
+<span class="nc" id="L58">        return ResponseCode.OK;</span>
+    }
+
+    private static Response handleSuccessfulMessages(Response finalResponse, List&lt;Response&gt; responses) {
+<span class="nc" id="L62">        finalResponse.putAll(responses.stream()</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">                .filter(response -&gt; response.getResponseCode() == ResponseCode.OK)</span>
+<span class="nc" id="L64">                .flatMap(response -&gt; response.getResult().entrySet().stream())</span>
+<span class="nc" id="L65">                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,</span>
+                        (val1, val2) -&gt; {
+<span class="nc bnc" id="L67" title="All 2 branches missed.">                            if (val1 instanceof List) {</span>
+<span class="nc" id="L68">                                return new ArrayList() {{</span>
+<span class="nc" id="L69">                                    addAll((List) val1);</span>
+<span class="nc" id="L70">                                    add(val2);</span>
+<span class="nc" id="L71">                                }};</span>
+                            } else
+<span class="nc" id="L73">                                return (Arrays.asList(val1, val2));</span>
+                        })));
+<span class="nc" id="L75">        return finalResponse;</span>
+    }
+
+    private static Response handleUnsuccessfulMessages(Response finalResponse, List&lt;Response&gt; responses) {
+<span class="nc" id="L79">        finalResponse.putAll(responses.stream()</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">                .filter(response -&gt; response.getResponseCode() != ResponseCode.OK)</span>
+<span class="nc" id="L81">                .collect(Collectors.toMap(response -&gt; response.getResponseCode().name(),</span>
+<span class="nc" id="L82">                        response -&gt; response.getParams().getErrmsg(),</span>
+                        (val1, val2) -&gt; {
+<span class="nc bnc" id="L84" title="All 2 branches missed.">                            if (val1 instanceof List) {</span>
+<span class="nc" id="L85">                                return new ArrayList() {{</span>
+<span class="nc" id="L86">                                    addAll((List) val1);</span>
+<span class="nc" id="L87">                                    add(val2);</span>
+<span class="nc" id="L88">                                }};</span>
+                            } else
+<span class="nc" id="L90">                                return (Arrays.asList(val1, val2));</span>
+                        })));
+<span class="nc" id="L92">        return finalResponse;</span>
+    }
+
+    public static Response OK() {
+<span class="nc" id="L96">        Response response = new Response();</span>
+<span class="nc" id="L97">        response.setParams(getSucessStatus());</span>
+<span class="nc" id="L98">        return response;</span>
+    }
+
+    private static ResponseParams getSucessStatus() {
+<span class="nc" id="L102">        ResponseParams params = new ResponseParams();</span>
+<span class="nc" id="L103">        params.setStatus(ResponseParams.StatusType.successful.name());</span>
+<span class="nc" id="L104">        return params;</span>
+    }
+
+    public static Response ERROR(ResponseCode responseCode, String errorCode, String errorMessage) {
+<span class="nc" id="L108">        Response response = new Response();</span>
+<span class="nc" id="L109">        response.setParams(getErrorStatus(errorCode, errorMessage));</span>
+<span class="nc" id="L110">        response.setResponseCode(responseCode);</span>
+<span class="nc" id="L111">        return response;</span>
+    }
+
+    private static ResponseParams getErrorStatus(String errorCode, String errorMessage) {
+<span class="nc" id="L115">        ResponseParams params = new ResponseParams();</span>
+<span class="nc" id="L116">        params.setErr(errorCode);</span>
+<span class="nc" id="L117">        params.setStatus(ResponseParams.StatusType.failed.name());</span>
+<span class="nc" id="L118">        params.setErrmsg(errorMessage);</span>
+<span class="nc" id="L119">        return params;</span>
+    }
+
+    public static boolean checkError(Response response) {
+<span class="nc" id="L123">        ResponseParams params = response.getParams();</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">        if (null != params) {</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">            if (StringUtils.equals(ResponseParams.StatusType.failed.name(), params.getStatus())) {</span>
+<span class="nc" id="L126">                return true;</span>
+            }
+        }
+<span class="nc" id="L129">        return false;</span>
+    }
+
+    public static String getErrorMessage(Response response) {
+<span class="nc" id="L133">        ResponseParams params = response.getParams();</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">        if (null != params) {</span>
+<span class="nc" id="L135">            return params.getErrmsg();</span>
+        }
+<span class="nc" id="L137">        return null;</span>
+    }
+
+    public static Response getErrorResponse(Throwable e) {
+<span class="nc" id="L141">        Response response = new Response();</span>
+<span class="nc" id="L142">        ResponseParams params = new ResponseParams();</span>
+<span class="nc" id="L143">        params.setStatus(ResponseParams.StatusType.failed.name());</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">        if (e instanceof MiddlewareException) {</span>
+<span class="nc" id="L145">            MiddlewareException mwException = (MiddlewareException) e;</span>
+<span class="nc" id="L146">            params.setErr(mwException.getErrCode());</span>
+<span class="nc" id="L147">            response.put(&quot;messages&quot;, mwException.getMessages());</span>
+<span class="nc" id="L148">        } else {</span>
+<span class="nc" id="L149">            e.printStackTrace();</span>
+<span class="nc" id="L150">            params.setErr(&quot;ERR_SYSTEM_EXCEPTION&quot;);</span>
+        }
+<span class="nc" id="L152">        System.out.println(&quot;Exception occurred - class :&quot; + e.getClass().getName() + &quot; with message :&quot; + e.getMessage());</span>
+<span class="nc" id="L153">        params.setErrmsg(setErrMessage(e));</span>
+<span class="nc" id="L154">        response.setParams(params);</span>
+<span class="nc" id="L155">        setResponseCode(response, e);</span>
+<span class="nc" id="L156">        return response;</span>
+    }
+
+    public static Boolean isResponseNotFoundError(Response response) {
+<span class="nc" id="L160">        ResponseParams params = response.getParams();</span>
+<span class="nc bnc" id="L161" title="All 4 branches missed.">         return (null != params &amp;&amp; StringUtils.equals(ResponseParams.StatusType.failed.name(), params.getStatus())</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">                    &amp;&amp; StringUtils.equals(response.getResponseCode().name(),ResponseCode.RESOURCE_NOT_FOUND.name()));</span>
+    }
+
+    private static String setErrMessage(Throwable e) {
+<span class="nc bnc" id="L166" title="All 2 branches missed.">        if (e instanceof MiddlewareException) {</span>
+<span class="nc" id="L167">            return e.getMessage();</span>
+        } else {
+<span class="nc" id="L169">            return &quot;Something went wrong in server while processing the request&quot;;</span>
+        }
+    }
+
+    private static void setResponseCode(Response res, Throwable e) {
+<span class="nc bnc" id="L174" title="All 2 branches missed.">        if (e instanceof ClientException) {</span>
+<span class="nc" id="L175">            res.setResponseCode(ResponseCode.CLIENT_ERROR);</span>
+<span class="nc bnc" id="L176" title="All 2 branches missed.">        } else if (e instanceof ServerException) {</span>
+<span class="nc" id="L177">            res.setResponseCode(ResponseCode.SERVER_ERROR);</span>
+<span class="nc bnc" id="L178" title="All 2 branches missed.">        } else if (e instanceof ResourceNotFoundException) {</span>
+<span class="nc" id="L179">            res.setResponseCode(ResponseCode.RESOURCE_NOT_FOUND);</span>
+        } else {
+<span class="nc" id="L181">            res.setResponseCode(ResponseCode.SERVER_ERROR);</span>
+        }
+<span class="nc" id="L183">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>TelemetryBEEvent.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">search-core</a> &gt; <a href="../index.html" class="el_bundle">platform-telemetry</a> &gt; <a href="index.source.html" class="el_package">org.sunbird.telemetry.dto</a> &gt; <span class="el_source">TelemetryBEEvent.java</span></div><h1>TelemetryBEEvent.java</h1><pre class="source lang-java linenums">package org.sunbird.telemetry.dto;
+
+import java.util.HashMap;
+import java.util.Map;
+
+<span class="nc" id="L6">public class TelemetryBEEvent {</span>
+
+	private String eid;
+	private long ets;
+	private String mid;
+	private String ver;
+	private String channel;
+	private Map&lt;String, String&gt; pdata;
+	private Map&lt;String, Object&gt; edata;
+	public String getEid() {
+<span class="nc" id="L16">		return eid;</span>
+	}
+	public void setEid(String eid) {
+<span class="nc" id="L19">		this.eid = eid;</span>
+<span class="nc" id="L20">	}</span>
+	public long getEts() {
+<span class="nc" id="L22">		return ets;</span>
+	}
+	public void setEts(long ets) {
+<span class="nc" id="L25">		this.ets = ets;</span>
+<span class="nc" id="L26">	}</span>
+	public String getVer() {
+<span class="nc" id="L28">		return ver;</span>
+	}
+	public void setVer(String ver) {
+<span class="nc" id="L31">		this.ver = ver;</span>
+<span class="nc" id="L32">	}</span>
+	public Map&lt;String, String&gt; getPdata() {
+<span class="nc" id="L34">		return pdata;</span>
+	}
+	public void setPdata(Map&lt;String, String&gt; pdata) {
+<span class="nc" id="L37">		this.pdata = pdata;</span>
+<span class="nc" id="L38">	}</span>
+	public Map&lt;String, Object&gt; getEdata() {
+<span class="nc" id="L40">		return edata;</span>
+	}
+	public void setEdata(Map&lt;String, Object&gt; eks) {
+<span class="nc" id="L43">		this.edata = new HashMap&lt;String, Object&gt;();</span>
+<span class="nc" id="L44">		edata.put(&quot;eks&quot;,eks);</span>
+<span class="nc" id="L45">	}</span>
+	public void setPdata(String id, String pid, String ver, String uid) {
+<span class="nc" id="L47">		this.pdata = new HashMap&lt;String, String&gt;();</span>
+<span class="nc" id="L48">		this.pdata.put(&quot;id&quot;, id);</span>
+<span class="nc" id="L49">		this.pdata.put(&quot;pid&quot;, pid);</span>
+<span class="nc" id="L50">		this.pdata.put(&quot;ver&quot;, ver);</span>
+<span class="nc" id="L51">	}</span>
+	public void setEdata(String cid, Object status, Object prevState, Object size, Object pkgVersion, Object concepts) {
+<span class="nc" id="L53">		this.edata = new HashMap&lt;String, Object&gt;();</span>
+<span class="nc" id="L54">		Map&lt;String, Object&gt; eks = new HashMap&lt;String, Object&gt;();</span>
+<span class="nc" id="L55">		eks.put(&quot;cid&quot;, cid);</span>
+<span class="nc" id="L56">		eks.put(&quot;state&quot;, status);</span>
+<span class="nc" id="L57">		eks.put(&quot;prevstate&quot;, prevState);</span>
+<span class="nc" id="L58">		eks.put(&quot;size&quot;, size);</span>
+<span class="nc" id="L59">		eks.put(&quot;pkgVersion&quot;, pkgVersion);</span>
+<span class="nc" id="L60">		eks.put(&quot;concepts&quot;, concepts);</span>
+<span class="nc" id="L61">		edata.put(&quot;eks&quot;, eks);</span>
+<span class="nc" id="L62">	}</span>
+	public void setEdata(String query, Object filters, Object sort, String correlationId, int size) {
+<span class="nc" id="L64">		this.edata = new HashMap&lt;String, Object&gt;();</span>
+<span class="nc" id="L65">		Map&lt;String, Object&gt; eks = new HashMap&lt;String, Object&gt;();</span>
+<span class="nc" id="L66">		eks.put(&quot;query&quot;, query);</span>
+<span class="nc" id="L67">		eks.put(&quot;filters&quot;, filters);</span>
+<span class="nc" id="L68">		eks.put(&quot;sort&quot;, sort);</span>
+<span class="nc" id="L69">		eks.put(&quot;correlationid&quot;, correlationId);</span>
+<span class="nc" id="L70">		eks.put(&quot;size&quot;, size);</span>
+<span class="nc" id="L71">		edata.put(&quot;eks&quot;, eks);</span>
+<span class="nc" id="L72">	}</span>
+	
+	public void setEdata(String id, Object state, Object prevState, Object lemma) {
+<span class="nc" id="L75">		this.edata = new HashMap&lt;String, Object&gt;();</span>
+<span class="nc" id="L76">		Map&lt;String, Object&gt; eks = new HashMap&lt;String, Object&gt;();</span>
+<span class="nc" id="L77">		eks.put(&quot;id&quot;, id);</span>
+<span class="nc" id="L78">		eks.put(&quot;state&quot;, state);</span>
+<span class="nc" id="L79">		eks.put(&quot;prevstate&quot;, prevState);</span>
+<span class="nc" id="L80">		eks.put(&quot;lemma&quot;, lemma);		</span>
+<span class="nc" id="L81">		edata.put(&quot;eks&quot;, eks);</span>
+<span class="nc" id="L82">	}</span>
+	public String getMid() {
+<span class="nc" id="L84">		return mid;</span>
+	}
+	public void setMid(String mid) {
+<span class="nc" id="L87">		this.mid = mid;</span>
+<span class="nc" id="L88">	}</span>
+	public String getChannel() {
+<span class="nc bnc" id="L90" title="All 2 branches missed.">		if(null == channel) {</span>
+<span class="nc" id="L91">			channel=&quot;&quot;;</span>
+		}
+<span class="nc" id="L93">		return channel;</span>
+	}
+	public void setChannel(String channel) {
+<span class="nc bnc" id="L96" title="All 2 branches missed.">		if(null == channel) {</span>
+<span class="nc" id="L97">			channel=&quot;&quot;;</span>
+		}
+<span class="nc" id="L99">		this.channel=channel;</span>
+<span class="nc" id="L100">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

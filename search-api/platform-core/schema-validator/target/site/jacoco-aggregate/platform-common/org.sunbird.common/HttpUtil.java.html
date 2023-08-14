@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>HttpUtil.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">schema-validator</a> &gt; <a href="../index.html" class="el_bundle">platform-common</a> &gt; <a href="index.source.html" class="el_package">org.sunbird.common</a> &gt; <span class="el_source">HttpUtil.java</span></div><h1>HttpUtil.java</h1><pre class="source lang-java linenums">package org.sunbird.common;
+
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.sunbird.common.dto.Response;
+import org.sunbird.common.dto.ResponseHandler;
+import org.sunbird.common.exception.ClientException;
+import org.sunbird.common.exception.ResponseCode;
+import org.sunbird.common.exception.ServerException;
+
+import java.util.HashMap;
+import java.util.Map;
+
+<span class="nc" id="L16">public class HttpUtil {</span>
+
+	private static final String PLATFORM_API_USERID = &quot;System&quot;;
+	private static final String DEFAULT_CONTENT_TYPE = &quot;application/json&quot;;
+
+	/**
+	 * @param url
+	 * @param requestMap
+	 * @param headerParam
+	 * @return Response
+	 * @throws Exception
+	 */
+	public Response post(String url, Map&lt;String, Object&gt; requestMap, Map&lt;String, String&gt; headerParam)
+			throws Exception {
+<span class="nc" id="L30">		validateRequest(url, headerParam);</span>
+<span class="nc" id="L31">		setDefaultHeader(headerParam);</span>
+<span class="nc bnc" id="L32" title="All 2 branches missed.">		if (MapUtils.isEmpty(requestMap))</span>
+<span class="nc" id="L33">			throw new ServerException(&quot;ERR_INVALID_REQUEST_BODY&quot;, &quot;Request Body is Missing!&quot;);</span>
+		try {
+<span class="nc" id="L35">			HttpResponse&lt;String&gt; response = Unirest.post(url).headers(headerParam).body(JsonUtils.serialize(requestMap)).asString();</span>
+<span class="nc" id="L36">			return getResponse(response);</span>
+<span class="nc" id="L37">		} catch (Exception e) {</span>
+<span class="nc" id="L38">			throw new ServerException(&quot;ERR_API_CALL&quot;, &quot;Something Went Wrong While Making API Call | Error is: &quot; + e.getMessage());</span>
+		}
+	}
+
+	/**
+	 * @param url
+	 * @param queryParam
+	 * @param headerParam
+	 * @return Response
+	 * @throws Exception
+	 */
+	public Response get(String url, String queryParam, Map&lt;String, String&gt; headerParam)
+			throws Exception {
+<span class="nc" id="L51">		validateRequest(url, headerParam);</span>
+<span class="nc" id="L52">		setDefaultHeader(headerParam);</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">		String reqUrl = StringUtils.isNotBlank(queryParam) ? url + &quot;?&quot; + queryParam : url;</span>
+		try {
+<span class="nc" id="L55">			HttpResponse&lt;String&gt; response = Unirest.get(reqUrl).headers(headerParam).asString();</span>
+<span class="nc" id="L56">			return getResponse(response);</span>
+<span class="nc" id="L57">		} catch (Exception e) {</span>
+<span class="nc" id="L58">			throw new ServerException(&quot;ERR_API_CALL&quot;, &quot;Something Went Wrong While Making API Call | Error is: &quot; + e.getMessage());</span>
+		}
+	}
+
+	/**
+	 *  This method is to get file related metadata (size and mimeType)from file url, without downloading.
+	 * @param url
+	 * @param headers
+	 * @return
+	 */
+	public Map&lt;String, Object&gt; getMetadata(String url,  Map&lt;String, String&gt; headers) {
+		try {
+<span class="nc" id="L70">			validateRequest(url, headers);</span>
+<span class="nc" id="L71">			setDefaultHeader(headers);</span>
+<span class="nc" id="L72">			Map&lt;String, Object&gt; metadataMap = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L73">			HttpResponse&lt;String&gt; response = Unirest.head(url).headers(headers).asString();</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">			if (response.getStatus() == 200) {</span>
+<span class="nc" id="L75">				metadataMap.put(&quot;Content-Length&quot;, ((Number) Double.parseDouble(response.getHeaders().getOrDefault(&quot;Content-Length&quot;, response.getHeaders().get(&quot;content-length&quot;)).get(0))).doubleValue());</span>
+<span class="nc" id="L76">				metadataMap.put(&quot;Content-Type&quot;, response.getHeaders().getOrDefault(&quot;Content-Type&quot;, response.getHeaders().get(&quot;content-type&quot;)).get(0));</span>
+<span class="nc" id="L77">				return metadataMap;</span>
+			} else {
+<span class="nc" id="L79">				throw new ClientException(&quot;ERR_API_CALL&quot;, &quot;Fetching of file related metadata Failed with response code &quot; + response.getStatus() + &quot; and message: &quot; + response.getStatusText());</span>
+			}
+<span class="nc" id="L81">		} catch (ClientException e) {</span>
+<span class="nc" id="L82">			throw new ClientException(&quot;ERR_API_CALL&quot;, &quot;Something Went Wrong While Making API Call | Error is: &quot; + e.getMessage());</span>
+<span class="nc" id="L83">		} catch (Exception e) {</span>
+<span class="nc" id="L84">			throw new ServerException(&quot;ERR_API_CALL&quot;, &quot;Something Went Wrong While Making API Call | Error is: &quot; + e.getMessage());</span>
+		}
+	}
+
+	private void validateRequest(String url, Map&lt;String, String&gt; headerParam) {
+<span class="nc bnc" id="L89" title="All 2 branches missed.">		if (StringUtils.isBlank(url))</span>
+<span class="nc" id="L90">			throw new ServerException(&quot;ERR_INVALID_URL&quot;, &quot;Url Parameter is Missing!&quot;);</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">		if (headerParam == null)</span>
+<span class="nc" id="L92">			throw new ServerException(&quot;ERR_INVALID_HEADER_PARAM&quot;, &quot;Header Parameter is Missing!&quot;);</span>
+<span class="nc" id="L93">	}</span>
+
+	private Response getResponse(HttpResponse&lt;String&gt; response) {
+<span class="nc bnc" id="L96" title="All 4 branches missed.">		if (null != response &amp;&amp; StringUtils.isNotBlank(response.getBody())) {</span>
+			try {
+<span class="nc" id="L98">				return JsonUtils.deserialize(response.getBody(), Response.class);</span>
+<span class="nc" id="L99">			} catch (Exception e) {</span>
+<span class="nc" id="L100">				throw new ServerException(&quot;ERR_DATA_PARSER&quot;, &quot;Unable to parse data! | Error is: &quot; + e.getMessage());</span>
+			}
+		} else
+<span class="nc" id="L103">			return ResponseHandler.ERROR(ResponseCode.SERVER_ERROR, ResponseCode.SERVER_ERROR.name(), &quot;Null Response Received While Making Api Call!&quot;);</span>
+	}
+
+	private void setDefaultHeader(Map&lt;String, String&gt; headerParam) {
+<span class="nc bnc" id="L107" title="All 2 branches missed.">		if(!headerParam.containsKey(&quot;Content-Type&quot;))</span>
+<span class="nc" id="L108">			headerParam.put(&quot;Content-Type&quot;, DEFAULT_CONTENT_TYPE);</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">		if(!headerParam.containsKey(&quot;user-id&quot;))</span>
+<span class="nc" id="L110">			headerParam.put(&quot;user-id&quot;, PLATFORM_API_USERID);</span>
+<span class="nc" id="L111">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

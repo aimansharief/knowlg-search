@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>Request.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">search-core</a> &gt; <a href="../index.html" class="el_bundle">platform-common</a> &gt; <a href="index.source.html" class="el_package">org.sunbird.common.dto</a> &gt; <span class="el_source">Request.java</span></div><h1>Request.java</h1><pre class="source lang-java linenums">package org.sunbird.common.dto;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.apache.commons.collections4.MapUtils;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * This contains data (value objects) to be passed to middleware command
+ * 
+ * @author rayulu
+ * 
+ */
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Request implements Serializable {
+
+    private static final long serialVersionUID = -2362783406031347676L;
+
+    protected Map&lt;String, Object&gt; context;
+    private String id;
+    private String ver;
+    private String ts;
+    private RequestParams params;
+
+<span class="nc" id="L27">	private Map&lt;String, Object&gt; request = new HashMap&lt;String, Object&gt;();</span>
+
+    private String operation;
+    private String objectType;
+
+<span class="nc" id="L32">    public Request() {</span>
+<span class="nc" id="L33">    	this.params = new RequestParams();</span>
+<span class="nc" id="L34">    }</span>
+
+<span class="nc" id="L36">    public Request(Map&lt;String, Object&gt; context, Map&lt;String, Object&gt; request, String operation, String objectType) {</span>
+<span class="nc" id="L37">        this.context = context;</span>
+<span class="nc" id="L38">        this.request = request;</span>
+<span class="nc" id="L39">        this.operation = operation;</span>
+<span class="nc" id="L40">        this.objectType = objectType;</span>
+<span class="nc" id="L41">    }</span>
+    
+<span class="nc" id="L43">    public Request(Request request) {</span>
+<span class="nc" id="L44">    	this.params = request.getParams();</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">    	if (null == this.params)</span>
+<span class="nc" id="L46">    	    this.params = new RequestParams();</span>
+<span class="nc" id="L47">        this.context = new HashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L48" title="All 2 branches missed.">    	if (MapUtils.isNotEmpty(request.getContext()))</span>
+<span class="nc" id="L49">            this.context.putAll(request.getContext());</span>
+<span class="nc" id="L50">    }</span>
+
+    public Request(Request request, String objectType) {
+<span class="nc" id="L53">        this(request);</span>
+<span class="nc" id="L54">        this.objectType = objectType;</span>
+<span class="nc" id="L55">    }</span>
+
+    public String getRequestId() {
+<span class="nc" id="L58">        return null;</span>
+    }
+
+    public Map&lt;String, Object&gt; getContext() {
+<span class="nc" id="L62">        return context;</span>
+    }
+
+    public void setContext(Map&lt;String, Object&gt; context) {
+<span class="nc" id="L66">        this.context = context;</span>
+<span class="nc" id="L67">    }</span>
+
+    /**
+     * @return the requestValueObjects
+     */
+    public Map&lt;String, Object&gt; getRequest() {
+<span class="nc" id="L73">        return request;</span>
+    }
+
+    public void setRequest(Map&lt;String, Object&gt; request) {
+<span class="nc" id="L77">        this.request = request;</span>
+<span class="nc" id="L78">    }</span>
+
+    public Object get(String key) {
+<span class="nc" id="L81">        return request.get(key);</span>
+    }
+
+    public Object getOrDefault(String key, Object defaultValue) {
+<span class="nc" id="L85">        Object value = request.getOrDefault(key, defaultValue);</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        if (value == null) return defaultValue; else return value;</span>
+    }
+
+	public void put(String key, Object vo) {
+<span class="nc" id="L90">        request.put(key, vo);</span>
+<span class="nc" id="L91">    }</span>
+
+    public Request putIn(String key, Object vo) {
+<span class="nc" id="L94">        request.put(key, vo);</span>
+<span class="nc" id="L95">        return this;</span>
+    }
+
+    public void putAll(Map&lt;String, Object&gt; map) {
+<span class="nc" id="L99">        request.putAll(map);</span>
+<span class="nc" id="L100">    }</span>
+
+    public String getOperation() {
+<span class="nc" id="L103">        return operation;</span>
+    }
+
+    public void setOperation(String operation) {
+<span class="nc" id="L107">        this.operation = operation;</span>
+<span class="nc" id="L108">    }</span>
+
+    public void copyRequestValueObjects(Map&lt;String, Object&gt; map) {
+<span class="nc bnc" id="L111" title="All 2 branches missed.">        if (MapUtils.isNotEmpty(map)) {</span>
+<span class="nc" id="L112">            this.request.putAll(map);</span>
+        }
+<span class="nc" id="L114">    }</span>
+
+    @Override
+    public String toString() {
+<span class="nc bnc" id="L118" title="All 2 branches missed.">        return &quot;Request [&quot; + (context != null ? &quot;context=&quot; + context + &quot;, &quot; : &quot;&quot;)</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">                + (request != null ? &quot;requestValueObjects=&quot; + request : &quot;&quot;) + &quot;]&quot;;</span>
+    }
+
+    public String getId() {
+<span class="nc" id="L123">        return id;</span>
+    }
+
+    public void setId(String id) {
+<span class="nc" id="L127">        this.id = id;</span>
+<span class="nc" id="L128">    }</span>
+
+    public String getVer() {
+<span class="nc" id="L131">        return ver;</span>
+    }
+
+    public void setVer(String ver) {
+<span class="nc" id="L135">        this.ver = ver;</span>
+<span class="nc" id="L136">    }</span>
+
+    public String getTs() {
+<span class="nc" id="L139">        return ts;</span>
+    }
+
+    public void setTs(String ts) {
+<span class="nc" id="L143">        this.ts = ts;</span>
+<span class="nc" id="L144">    }</span>
+
+    public RequestParams getParams() {
+<span class="nc" id="L147">        return params;</span>
+    }
+
+    public void setParams(RequestParams params) {
+<span class="nc" id="L151">        this.params = params;</span>
+<span class="nc" id="L152">    }</span>
+
+    public String getObjectType() {
+<span class="nc" id="L155">        return objectType;</span>
+    }
+
+    public void setObjectType(String objectType) {
+<span class="nc" id="L159">        this.objectType = objectType;</span>
+<span class="nc" id="L160">    }</span>
+
+    public String graphId() {
+<span class="nc" id="L163">        return (String) context.getOrDefault(&quot;graph_id&quot;, &quot;&quot;);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

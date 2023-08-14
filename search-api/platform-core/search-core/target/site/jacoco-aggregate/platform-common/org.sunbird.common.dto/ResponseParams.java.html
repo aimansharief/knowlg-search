@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>ResponseParams.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">search-core</a> &gt; <a href="../index.html" class="el_bundle">platform-common</a> &gt; <a href="index.source.html" class="el_package">org.sunbird.common.dto</a> &gt; <span class="el_source">ResponseParams.java</span></div><h1>ResponseParams.java</h1><pre class="source lang-java linenums">package org.sunbird.common.dto;
+
+import java.io.Serializable;
+
+/**
+ * 
+ * @author rayulu
+ * 
+ */
+public class ResponseParams implements Serializable {
+
+    private static final long serialVersionUID = 6772142067149203497L;
+
+    private String resmsgid;
+    private String msgid;
+    private String err;
+    private String status;
+    private String errmsg;
+
+<span class="nc" id="L20">    public ResponseParams() {</span>
+
+<span class="nc" id="L22">    }</span>
+
+<span class="nc" id="L24">    public enum StatusType {</span>
+
+<span class="nc" id="L26">        successful, warning, failed;</span>
+    }
+
+    public String getResmsgid() {
+<span class="nc" id="L30">        return resmsgid;</span>
+    }
+
+    public void setResmsgid(String resmsgid) {
+<span class="nc" id="L34">        this.resmsgid = resmsgid;</span>
+<span class="nc" id="L35">    }</span>
+
+    public String getMsgid() {
+<span class="nc" id="L38">        return msgid;</span>
+    }
+
+    public void setMsgid(String msgid) {
+<span class="nc" id="L42">        this.msgid = msgid;</span>
+<span class="nc" id="L43">    }</span>
+
+    public String getErr() {
+<span class="nc" id="L46">        return err;</span>
+    }
+
+    public void setErr(String err) {
+<span class="nc" id="L50">        this.err = err;</span>
+<span class="nc" id="L51">    }</span>
+
+    public String getStatus() {
+<span class="nc" id="L54">        return status;</span>
+    }
+
+    public void setStatus(String status) {
+<span class="nc" id="L58">        this.status = status;</span>
+<span class="nc" id="L59">    }</span>
+
+    public String getErrmsg() {
+<span class="nc" id="L62">        return errmsg;</span>
+    }
+
+    public void setErrmsg(String message) {
+<span class="nc" id="L66">        this.errmsg = message;</span>
+<span class="nc" id="L67">    }</span>
+
+    @Override
+    public String toString() {
+<span class="nc bnc" id="L71" title="All 10 branches missed.">        return &quot;Params [&quot; + (resmsgid !=null ? &quot;resmsgid=&quot; + resmsgid + &quot;, &quot; : &quot;&quot;) + (msgid != null ? &quot;msgid=&quot; + msgid + &quot;, &quot; : &quot;&quot;) + (err != null ? &quot;err=&quot; + err + &quot;, &quot; : &quot;&quot;) + (status != null ? &quot;status=&quot; + status + &quot;, &quot; : &quot;&quot;) + (errmsg != null ? &quot;errmsg=&quot; + errmsg :&quot;&quot;) + &quot;]&quot;;</span>
+    }
+
+    // @Override
+    // public String toString() {
+    // return &quot;Params [&quot; + (err != null ? &quot;err=&quot; + err + &quot;, &quot; : &quot;&quot;) + (status !=
+    // null ? &quot;statusType=&quot; + status + &quot;, &quot; : &quot;&quot;)
+    // + (errmsg != null ? &quot;errmsg=&quot; + errmsg + &quot;, &quot; : &quot;&quot;) + &quot;]&quot;;
+    // }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

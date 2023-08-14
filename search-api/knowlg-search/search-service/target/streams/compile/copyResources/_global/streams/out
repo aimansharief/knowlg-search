@@ -1,0 +1,4 @@
+[0m[[0m[0mdebug[0m] [0m[0mCopy resource mappings: [0m
+[0m[[0m[0mdebug[0m] [0m[0m	(/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/knowlg-search/search-service/conf/logback.xml,/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/knowlg-search/search-service/target/classes/logback.xml)[0m
+[0m[[0m[0mdebug[0m] [0m[0m	(/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/knowlg-search/search-service/conf/application.conf,/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/knowlg-search/search-service/target/classes/application.conf)[0m
+[0m[[0m[0mdebug[0m] [0m[0m	(/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/knowlg-search/search-service/conf/routes,/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/knowlg-search/search-service/target/classes/routes)[0m

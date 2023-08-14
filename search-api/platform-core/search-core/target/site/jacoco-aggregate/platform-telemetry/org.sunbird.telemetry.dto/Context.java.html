@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>Context.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">search-core</a> &gt; <a href="../index.html" class="el_bundle">platform-telemetry</a> &gt; <a href="index.source.html" class="el_package">org.sunbird.telemetry.dto</a> &gt; <span class="el_source">Context.java</span></div><h1>Context.java</h1><pre class="source lang-java linenums">/**
+ * 
+ */
+package org.sunbird.telemetry.dto;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+/**
+ * @author mahesh
+ *
+ */
+
+@JsonInclude(Include.NON_NULL)
+public class Context {
+
+	public Context(String channel, String env, Producer pdata) {
+<span class="nc" id="L18">		super();</span>
+<span class="nc" id="L19">		this.channel = channel;</span>
+<span class="nc" id="L20">		this.env = env;</span>
+<span class="nc" id="L21">		this.pdata = pdata;</span>
+<span class="nc" id="L22">	}</span>
+	
+	private String channel;
+	private Producer pdata;
+	private String env;
+	private String sid;
+	private String did;
+	
+	
+	/**
+	 * @return the channel
+	 */
+	public String getChannel() {
+<span class="nc" id="L35">		return channel;</span>
+	}
+	/**
+	 * @param channel the channel to set
+	 */
+	public void setChannel(String channel) {
+<span class="nc" id="L41">		this.channel = channel;</span>
+<span class="nc" id="L42">	}</span>
+	/**
+	 * @return the pdata
+	 */
+	public Producer getPdata() {
+<span class="nc" id="L47">		return pdata;</span>
+	}
+	/**
+	 * @param pdata the pdata to set
+	 */
+	public void setPdata(Producer pdata) {
+<span class="nc" id="L53">		this.pdata = pdata;</span>
+<span class="nc" id="L54">	}</span>
+	/**
+	 * @return the env
+	 */
+	public String getEnv() {
+<span class="nc" id="L59">		return env;</span>
+	}
+	/**
+	 * @param env the env to set
+	 */
+	public void setEnv(String env) {
+<span class="nc" id="L65">		this.env = env;</span>
+<span class="nc" id="L66">	}</span>
+	/**
+	 * @return the sid
+	 */
+	public String getSid() {
+<span class="nc" id="L71">		return sid;</span>
+	}
+	/**
+	 * @param sid the sid to set
+	 */
+	public void setSid(String sid) {
+<span class="nc" id="L77">		this.sid = sid;</span>
+<span class="nc" id="L78">	}</span>
+	/**
+	 * @return the did
+	 */
+	public String getDid() {
+<span class="nc" id="L83">		return did;</span>
+	}
+	/**
+	 * @param did the did to set
+	 */
+	public void setDid(String did) {
+<span class="nc" id="L89">		this.did = did;</span>
+<span class="nc" id="L90">	}</span>
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>Target.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">search-core</a> &gt; <a href="../index.html" class="el_bundle">platform-telemetry</a> &gt; <a href="index.source.html" class="el_package">org.sunbird.telemetry.dto</a> &gt; <span class="el_source">Target.java</span></div><h1>Target.java</h1><pre class="source lang-java linenums">package org.sunbird.telemetry.dto;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+/**
+ * 
+ * @author mahesh
+ *
+ */
+
+@JsonInclude(Include.NON_NULL)
+public class Target {
+	
+	public Target(String id, String type) {
+<span class="nc" id="L16">		super();</span>
+<span class="nc" id="L17">		this.id = id;</span>
+<span class="nc" id="L18">		this.type = type;</span>
+<span class="nc" id="L19">	}</span>
+	
+	private String id;
+	private String type;
+	private String ver;
+	private String subtype;
+	private String name;
+	private String code;
+	private Parent parent;
+	
+	
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+<span class="nc" id="L34">		return id;</span>
+	}
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(String id) {
+<span class="nc" id="L40">		this.id = id;</span>
+<span class="nc" id="L41">	}</span>
+	/**
+	 * @return the type
+	 */
+	public String getType() {
+<span class="nc" id="L46">		return type;</span>
+	}
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(String type) {
+<span class="nc" id="L52">		this.type = type;</span>
+<span class="nc" id="L53">	}</span>
+	/**
+	 * @return the ver
+	 */
+	public String getVer() {
+<span class="nc" id="L58">		return ver;</span>
+	}
+	/**
+	 * @param ver the ver to set
+	 */
+	public void setVer(String ver) {
+<span class="nc" id="L64">		this.ver = ver;</span>
+<span class="nc" id="L65">	}</span>
+	/**
+	 * @return the subtype
+	 */
+	public String getSubtype() {
+<span class="nc" id="L70">		return subtype;</span>
+	}
+	/**
+	 * @param subtype the subtype to set
+	 */
+	public void setSubtype(String subtype) {
+<span class="nc" id="L76">		this.subtype = subtype;</span>
+<span class="nc" id="L77">	}</span>
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+<span class="nc" id="L82">		return name;</span>
+	}
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+<span class="nc" id="L88">		this.name = name;</span>
+<span class="nc" id="L89">	}</span>
+	/**
+	 * @return the code
+	 */
+	public String getCode() {
+<span class="nc" id="L94">		return code;</span>
+	}
+	/**
+	 * @param code the code to set
+	 */
+	public void setCode(String code) {
+<span class="nc" id="L100">		this.code = code;</span>
+<span class="nc" id="L101">	}</span>
+	/**
+	 * @return the parent
+	 */
+	public Parent getParent() {
+<span class="nc" id="L106">		return parent;</span>
+	}
+	/**
+	 * @param parent the parent to set
+	 */
+	public void setParent(Parent parent) {
+<span class="nc" id="L112">		this.parent = parent;</span>
+<span class="nc" id="L113">	}</span>
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

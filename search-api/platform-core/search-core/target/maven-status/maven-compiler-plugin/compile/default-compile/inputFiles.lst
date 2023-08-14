@@ -1,0 +1,7 @@
+/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/platform-core/search-core/src/main/java/org/sunbird/search/dto/SearchDTO.java
+/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/platform-core/search-core/src/main/java/org/sunbird/search/client/ElasticSearchUtil.java
+/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/platform-core/search-core/src/main/java/org/sunbird/search/util/DefinitionUtil.java
+/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/platform-core/search-core/src/main/java/org/sunbird/search/transformers/IESResultTransformer.java
+/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/platform-core/search-core/src/main/java/org/sunbird/search/transformers/AggregationsResultTransformer.java
+/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/platform-core/search-core/src/main/java/org/sunbird/search/processor/SearchProcessor.java
+/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/platform-core/search-core/src/main/java/org/sunbird/search/util/SearchConstants.java

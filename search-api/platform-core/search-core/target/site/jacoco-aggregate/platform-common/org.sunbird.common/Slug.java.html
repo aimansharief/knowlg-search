@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>Slug.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">search-core</a> &gt; <a href="../index.html" class="el_bundle">platform-common</a> &gt; <a href="index.source.html" class="el_package">org.sunbird.common</a> &gt; <span class="el_source">Slug.java</span></div><h1>Slug.java</h1><pre class="source lang-java linenums">package org.sunbird.common;
+
+import net.sf.junidecode.Junidecode;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
+import java.net.URLDecoder;
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
+import java.util.Locale;
+import java.util.regex.Pattern;
+
+<span class="nc" id="L14">public class Slug {</span>
+
+<span class="nc" id="L16">    private static final Pattern NONLATIN = Pattern.compile(&quot;[^\\w-\\.]&quot;);</span>
+<span class="nc" id="L17">    private static final Pattern WHITESPACE = Pattern.compile(&quot;[\\s]&quot;);</span>
+<span class="nc" id="L18">    private static final Pattern DUPDASH = Pattern.compile(&quot;-+&quot;);</span>
+
+    public static void main(String[] args) {
+<span class="nc" id="L21">        System.out.println(makeSlug(&quot;Cov-e*r+I/ma.ge.png&quot;, true));</span>
+<span class="nc" id="L22">    }</span>
+
+    public static File createSlugFile(File f) {
+        try {
+<span class="nc" id="L26">            String name = f.getName();</span>
+<span class="nc" id="L27">            String slug = Slug.makeSlug(name, true);</span>
+<span class="nc bnc" id="L28" title="All 2 branches missed.">            if (!StringUtils.equals(name, slug)) {</span>
+<span class="nc" id="L29">                String path = FilenameUtils.getFullPath(f.getAbsolutePath());</span>
+<span class="nc" id="L30">                String newName = path + File.separator + slug;</span>
+<span class="nc" id="L31">                File newFile = new File(newName);</span>
+<span class="nc" id="L32">                f.renameTo(newFile);</span>
+<span class="nc" id="L33">                f = newFile;</span>
+<span class="nc" id="L34">                return newFile;</span>
+            }
+<span class="nc" id="L36">        } catch (Exception e) {</span>
+<span class="nc" id="L37">            e.printStackTrace();</span>
+<span class="nc" id="L38">        }</span>
+<span class="nc" id="L39">        return f;</span>
+    }
+
+    public static String makeSlug(String input) {
+        // Default is slugging without transliteration
+<span class="nc" id="L44">        return makeSlug(input, false);</span>
+    }
+
+    public static String makeSlug(String input, boolean transliterate) {
+<span class="nc" id="L48">        String origInput = input;</span>
+        // Validate the input
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        if (input == null)</span>
+<span class="nc" id="L51">            throw new IllegalArgumentException(&quot;Input is null&quot;);</span>
+        // Remove extra spaces
+<span class="nc" id="L53">        input = input.trim();</span>
+        // Remove URL encoding
+<span class="nc" id="L55">        input = urlDecode(input);</span>
+        // If transliterate is required
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        if (transliterate) {</span>
+            // Tranlisterate &amp; cleanup
+<span class="nc" id="L59">            String transliterated = transliterate(input);</span>
+            //transliterated = removeDuplicateChars(transliterated);
+<span class="nc" id="L61">            input = transliterated;</span>
+        }
+        // Replace all whitespace with dashes
+<span class="nc" id="L64">        input = WHITESPACE.matcher(input).replaceAll(&quot;-&quot;);</span>
+        // Remove all accent chars
+<span class="nc" id="L66">        input = Normalizer.normalize(input, Form.NFD);</span>
+        // Remove all non-latin special characters
+<span class="nc" id="L68">        input = NONLATIN.matcher(input).replaceAll(&quot;&quot;);</span>
+        // Remove any consecutive dashes
+<span class="nc" id="L70">        input = normalizeDashes(input);</span>
+        // Validate before returning
+<span class="nc" id="L72">        validateResult(input, origInput);</span>
+        // Slug is always lowercase
+<span class="nc" id="L74">        return input.toLowerCase(Locale.ENGLISH);</span>
+    }
+
+    private static void validateResult(String input, String origInput) {
+        // Check if we are not left with a blank
+<span class="nc bnc" id="L79" title="All 2 branches missed.">        if (input.length() == 0)</span>
+<span class="nc" id="L80">            throw new IllegalArgumentException(&quot;Failed to cleanup the input &quot; + origInput);</span>
+        // Check if we are not left with a blank file name or extension
+        // #686 - remove the validation check for names starting and ending with &quot;.&quot;
+//        if (input.startsWith(&quot;.&quot;))
+//            throw new IllegalArgumentException(&quot;Failed to cleanup the file name &quot; + origInput);
+//        if (input.endsWith(&quot;.&quot;))
+//            throw new IllegalArgumentException(&quot;Failed to cleanup the file extension &quot; + origInput);
+<span class="nc" id="L87">    }</span>
+
+    public static String transliterate(String input) {
+<span class="nc" id="L90">        return Junidecode.unidecode(input);</span>
+    }
+
+    public static String urlDecode(String input) {
+        try {
+<span class="nc" id="L95">            input = URLDecoder.decode(input, &quot;UTF-8&quot;);</span>
+<span class="nc" id="L96">        } catch (Exception ex) {</span>
+            // Suppress
+<span class="nc" id="L98">        }</span>
+<span class="nc" id="L99">        return input;</span>
+    }
+
+    public static String removeDuplicateChars(String text) {
+<span class="nc" id="L103">        StringBuilder ret = new StringBuilder(text.length());</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">        if (text.length() == 0) {</span>
+<span class="nc" id="L105">            return &quot;&quot;;</span>
+        }
+<span class="nc" id="L107">        ret.append(text.charAt(0));</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        for (int i = 1; i &lt; text.length(); i++) {</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">            if (text.charAt(i) != text.charAt(i - 1)) {</span>
+<span class="nc" id="L110">                ret.append(text.charAt(i));</span>
+            }
+        }
+<span class="nc" id="L113">        return ret.toString();</span>
+    }
+
+    public static String normalizeDashes(String text) {
+<span class="nc" id="L117">        String clean = DUPDASH.matcher(text).replaceAll(&quot;-&quot;);</span>
+        // Special case that only dashes remain
+<span class="nc bnc" id="L119" title="All 4 branches missed.">        if (clean.equals(&quot;-&quot;) || clean.equals(&quot;--&quot;))</span>
+<span class="nc" id="L120">            return &quot;&quot;;</span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">        int startIdx = (clean.startsWith(&quot;-&quot;) ? 1 : 0);</span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        int endIdx = (clean.endsWith(&quot;-&quot;) ? 1 : 0);</span>
+<span class="nc" id="L123">        clean = clean.substring(startIdx, (clean.length() - endIdx));</span>
+<span class="nc" id="L124">        return clean;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

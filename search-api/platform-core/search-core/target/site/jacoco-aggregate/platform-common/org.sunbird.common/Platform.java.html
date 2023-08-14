@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>Platform.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">search-core</a> &gt; <a href="../index.html" class="el_bundle">platform-common</a> &gt; <a href="index.source.html" class="el_package">org.sunbird.common</a> &gt; <span class="el_source">Platform.java</span></div><h1>Platform.java</h1><pre class="source lang-java linenums">package org.sunbird.common;
+
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 
+ * @author Mahesh Kumar Gangula
+ *
+ */
+
+<span class="nc" id="L18">public class Platform {</span>
+<span class="nc" id="L19">	private static Config defaultConf = ConfigFactory.load();</span>
+<span class="nc" id="L20">	private static Config envConf = ConfigFactory.systemEnvironment();</span>
+<span class="nc" id="L21">	public static Config config = envConf.withFallback(defaultConf);</span>
+
+<span class="nc" id="L23">	private static int requestTimeout = 30;</span>
+<span class="nc" id="L24">	private static Map&lt;String, List&lt;String&gt;&gt; graphIds = new HashMap&lt;&gt;();</span>
+
+	
+	public static void loadProperties(Config conf) {
+<span class="nc" id="L28">		config = config.withFallback(conf);</span>
+<span class="nc" id="L29">	}</span>
+
+	public static int getTimeout() {
+<span class="nc" id="L32">		return requestTimeout;</span>
+	}
+
+	public static List&lt;String&gt; getGraphIds(String... services) {
+<span class="nc" id="L36">		List&lt;String&gt; ids = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">		for (String service: services) {</span>
+<span class="nc" id="L38">			ids.addAll(getGraphIds(service));</span>
+		}
+<span class="nc" id="L40">		return ids;</span>
+	}
+	
+	private static List&lt;String&gt; getGraphIds(String service) {
+<span class="nc" id="L44">		service = service.toLowerCase();</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">		if (!graphIds.containsKey(service)) {</span>
+<span class="nc" id="L46">			String key = service + &quot;.graph_ids&quot;;</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">			if (config.hasPath(key)) {</span>
+<span class="nc" id="L48">				graphIds.put(service, config.getStringList(key));</span>
+			} else
+<span class="nc" id="L50">				return Arrays.asList();</span>
+		}
+<span class="nc" id="L52">		return graphIds.get(service);</span>
+	}
+
+	public static String getString(String key, String defaultVal) {
+<span class="nc bnc" id="L56" title="All 2 branches missed.">		return config.hasPath(key) ? config.getString(key) : defaultVal;</span>
+	}
+
+	public static Integer getInteger(String key, Integer defaultVal) {
+<span class="nc bnc" id="L60" title="All 2 branches missed.">		return config.hasPath(key) ? config.getInt(key) : defaultVal;</span>
+	}
+
+	public static Boolean getBoolean(String key, Boolean defaultVal) {
+<span class="nc bnc" id="L64" title="All 2 branches missed.">		return config.hasPath(key) ? config.getBoolean(key) : defaultVal;</span>
+	}
+
+	public static List&lt;String&gt; getStringList(String key, List&lt;String&gt; defaultVal) {
+<span class="nc bnc" id="L68" title="All 2 branches missed.">		return config.hasPath(key) ? config.getStringList(key) : defaultVal;</span>
+	}
+
+	public static Long getLong(String key, Long defaultVal) {
+<span class="nc bnc" id="L72" title="All 2 branches missed.">		return config.hasPath(key) ? config.getLong(key) : defaultVal;</span>
+	}
+
+	public static Double getDouble(String key, Double defaultVal) {
+<span class="nc bnc" id="L76" title="All 2 branches missed.">		return config.hasPath(key) ? config.getDouble(key) : defaultVal;</span>
+	}
+
+	public static Object getAnyRef(String key, Object defaultVal) {
+<span class="nc bnc" id="L80" title="All 2 branches missed.">		return config.hasPath(key) ? config.getAnyRef(key) : defaultVal;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>BaseSchemaValidator.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">search-core</a> &gt; <a href="../index.html" class="el_bundle">schema-validator</a> &gt; <a href="index.source.html" class="el_package">org.sunbird.schema.impl</a> &gt; <span class="el_source">BaseSchemaValidator.java</span></div><h1>BaseSchemaValidator.java</h1><pre class="source lang-java linenums">package org.sunbird.schema.impl;
+
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.typesafe.config.Config;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.leadpony.justify.api.JsonSchema;
+import org.leadpony.justify.api.JsonSchemaReader;
+import org.leadpony.justify.api.JsonSchemaReaderFactory;
+import org.leadpony.justify.api.JsonValidationService;
+import org.leadpony.justify.api.ProblemHandler;
+import org.leadpony.justify.api.ValidationConfig;
+import org.leadpony.justify.internal.schema.BasicJsonSchema;
+import org.sunbird.common.JsonUtils;
+import org.sunbird.schema.ISchemaValidator;
+import org.sunbird.schema.dto.ValidationResult;
+
+import javax.json.JsonReader;
+import javax.json.JsonReaderFactory;
+import java.io.IOException;
+import java.io.InputStream;
+
+import java.io.StringReader;
+import java.net.URI;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+public abstract class BaseSchemaValidator implements ISchemaValidator {
+
+    public String name;
+    public String version;
+<span class="nc" id="L40">    protected static final JsonValidationService service = JsonValidationService.newInstance();</span>
+    public JsonSchema schema;
+    protected JsonSchemaReaderFactory schemaReaderFactory;
+    protected Config config;
+
+<span class="nc" id="L45">    public BaseSchemaValidator(String name, String version) {</span>
+<span class="nc" id="L46">        this.name = name;</span>
+<span class="nc" id="L47">        this.version = version;</span>
+<span class="nc" id="L48">        this.schemaReaderFactory = service.createSchemaReaderFactoryBuilder()</span>
+//                .withSchemaResolver(this::resolveSchema)
+<span class="nc" id="L50">                .build();</span>
+
+<span class="nc" id="L52">    }</span>
+
+    public abstract JsonSchema resolveSchema(URI id);
+
+    /**
+     *
+     * @return
+     */
+    public Config getConfig() {
+<span class="nc" id="L61">        return config;</span>
+    }
+
+    /**
+     * Reads the JSON schemas from the specified path.
+     *
+
+     * @param stream the InputStream for the schema.
+     * @return the read schema.
+     */
+    protected JsonSchema readSchema(InputStream stream) {
+<span class="nc" id="L72">        try (JsonSchemaReader reader = schemaReaderFactory.createSchemaReader(stream)) {</span>
+<span class="nc" id="L73">            return reader.read();</span>
+        }
+    }
+
+    protected JsonSchema readSchema(Path path) {
+<span class="nc" id="L78">        try (JsonSchemaReader reader = schemaReaderFactory.createSchemaReader(path)) {</span>
+<span class="nc" id="L79">            return reader.read();</span>
+        }
+    }
+
+    public ValidationResult getStructuredData(Map&lt;String, Object&gt; input) {
+<span class="nc" id="L84">        Map&lt;String, Object&gt; relations = getRelations(input);</span>
+<span class="nc" id="L85">        Map&lt;String, Object&gt; externalData = getExternalProps(input);</span>
+<span class="nc" id="L86">        return new ValidationResult(input, relations, externalData);</span>
+    }
+
+    public ValidationResult validate(Map&lt;String, Object&gt; data) throws Exception {
+<span class="nc" id="L90">        String dataWithDefaults = withDefaultValues(JsonUtils.serialize(data));</span>
+<span class="nc" id="L91">        Map&lt;String, Object&gt; validationDataWithDefaults = cleanEmptyKeys(JsonUtils.deserialize(dataWithDefaults, Map.class));</span>
+
+<span class="nc" id="L93">        List&lt;String&gt; messages = validate(new StringReader(JsonUtils.serialize(validationDataWithDefaults)));</span>
+<span class="nc" id="L94">        Map&lt;String, Object&gt; dataMap = JsonUtils.deserialize(dataWithDefaults, Map.class);</span>
+<span class="nc" id="L95">        Map&lt;String, Object&gt; externalData = getExternalProps(dataMap);</span>
+<span class="nc" id="L96">        Map&lt;String, Object&gt; relations = getRelations(dataMap);</span>
+<span class="nc" id="L97">        return new ValidationResult(messages, dataMap, relations, externalData);</span>
+    }
+
+    private Map&lt;String, Object&gt; cleanEmptyKeys(Map&lt;String, Object&gt; input) {
+<span class="nc" id="L101">        return input.entrySet().stream().filter(entry -&gt; {</span>
+<span class="nc" id="L102">            Object value = entry.getValue();</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">            if(value == null){</span>
+<span class="nc" id="L104">                return false;</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">            }else if(value instanceof String) {</span>
+<span class="nc" id="L106">                return StringUtils.isNotBlank((String) value);</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">            } else if (value instanceof List) {</span>
+<span class="nc" id="L108">                return CollectionUtils.isNotEmpty((List) value);</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">            } else if (value instanceof String[]) {</span>
+<span class="nc" id="L110">                return CollectionUtils.isNotEmpty(Arrays.asList((String[]) value));</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">            } else if(value instanceof Map[]) {</span>
+<span class="nc" id="L112">                return CollectionUtils.isNotEmpty(Arrays.asList((Map[])value));</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">            } else if (value instanceof Map) {</span>
+<span class="nc" id="L114">                return MapUtils.isNotEmpty((Map) value);</span>
+            } else {
+<span class="nc" id="L116">                return true;</span>
+            }
+            // TODO: Here we are filtering the system converted properties to ignore the JSON Schema validation.
+<span class="nc bnc" id="L119" title="All 2 branches missed.">        }).filter(e -&gt; !Arrays.asList(&quot;objectType&quot;, &quot;identifier&quot;).contains(e.getKey())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));</span>
+    }
+
+    private List&lt;String&gt; validate(StringReader input) {
+<span class="nc" id="L123">        CustomProblemHandler handler = new CustomProblemHandler();</span>
+<span class="nc" id="L124">        try (JsonReader reader = service.createReader(input, schema, handler)) {</span>
+<span class="nc" id="L125">            reader.readValue();</span>
+<span class="nc" id="L126">            return handler.getProblemMessages();</span>
+        }
+    }
+
+    public String withDefaultValues(String data) {
+<span class="nc" id="L131">        ValidationConfig config = service.createValidationConfig();</span>
+<span class="nc" id="L132">        config.withSchema(schema).withDefaultValues(true);</span>
+<span class="nc" id="L133">        JsonReaderFactory readerFactory = service.createReaderFactory(config.getAsMap());</span>
+<span class="nc" id="L134">        JsonReader reader = readerFactory.createReader(new StringReader(data));</span>
+<span class="nc" id="L135">        return reader.readValue().toString();</span>
+    }
+
+    private Map&lt;String, Object&gt; getExternalProps(Map&lt;String, Object&gt; input) {
+<span class="nc" id="L139">        Map&lt;String, Object&gt; externalData = new HashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L140" title="All 4 branches missed.">        if (config != null &amp;&amp; config.hasPath(&quot;external.properties&quot;)) {</span>
+<span class="nc" id="L141">            Set&lt;String&gt; extProps = config.getObject(&quot;external.properties&quot;).keySet();</span>
+<span class="nc bnc" id="L142" title="All 4 branches missed.">            externalData = input.entrySet().stream().filter(f -&gt; extProps.contains(f.getKey()) &amp;&amp; f.getValue()!=null).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));</span>
+<span class="nc" id="L143">            input.keySet().removeAll(extProps);</span>
+        }
+<span class="nc" id="L145">        return externalData;</span>
+
+    }
+
+    private Map&lt;String, Object&gt; getRelations(Map&lt;String, Object&gt; data) {
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        if (this.getConfig().hasPath(&quot;relations&quot;)) {</span>
+<span class="nc" id="L151">            Set&lt;String&gt; relKeys = this.getConfig().getObject(&quot;relations&quot;).keySet();</span>
+<span class="nc" id="L152">            Map&lt;String, Object&gt; relationData = data.entrySet().stream().filter(e -&gt; relKeys.contains(e.getKey())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));</span>
+<span class="nc bnc" id="L153" title="All 2 branches missed.">            for (String relKey: relKeys) {</span>
+<span class="nc" id="L154">                data.remove(relKey);</span>
+<span class="nc" id="L155">            }</span>
+<span class="nc" id="L156">            return relationData;</span>
+        } else {
+<span class="nc" id="L158">            return null;</span>
+        }
+    }
+
+    /**
+     * Fetch all the properties of type JSON from the definition
+     * @return
+     */
+    public List&lt;String&gt; getJsonProps() {
+        try {
+<span class="nc" id="L168">            return ((Map&lt;String, Object&gt;) (new ObjectMapper().readValue(((BasicJsonSchema) schema).get(&quot;properties&quot;)</span>
+<span class="nc" id="L169">                    .getValueAsJson().asJsonObject().toString(), Map.class))).entrySet().stream().filter(entry -&gt;</span>
+<span class="nc bnc" id="L170" title="All 2 branches missed.">                    StringUtils.equalsIgnoreCase(&quot;object&quot;, (String) ((Map&lt;String, Object&gt;) entry.getValue()).get(&quot;type&quot;)) ||</span>
+<span class="nc bnc" id="L171" title="All 4 branches missed.">                            (null!=((Map&lt;String, Object&gt;) entry.getValue()).get(&quot;items&quot;) &amp;&amp; StringUtils.equalsIgnoreCase(&quot;object&quot;, (String) ((Map&lt;String, Object&gt;) ((Map&lt;String, Object&gt;) entry.getValue()).get(&quot;items&quot;)).get(&quot;type&quot;))</span>
+<span class="nc bnc" id="L172" title="All 4 branches missed.">                            || (null!=((Map&lt;String, Object&gt;) entry.getValue()).get(&quot;items&quot;) &amp;&amp; StringUtils.equalsIgnoreCase(&quot;string&quot;, (String) ((Map&lt;String, Object&gt;) ((Map&lt;String, Object&gt;) entry.getValue()).get(&quot;items&quot;)).get(&quot;type&quot;))))</span>
+<span class="nc" id="L173">            ).map(entry -&gt; entry.getKey()).collect(Collectors.toList());</span>
+<span class="nc" id="L174">        } catch (IOException e) {</span>
+<span class="nc" id="L175">            e.printStackTrace();</span>
+        }
+<span class="nc" id="L177">        return new ArrayList&lt;&gt;();</span>
+    }
+    
+    public List&lt;String&gt; getAllProps() {
+<span class="nc" id="L181">        List&lt;String&gt; propsList = new ArrayList&lt;&gt;();</span>
+        try {
+<span class="nc" id="L183">           propsList.addAll(((Map&lt;String, Object&gt;) (new ObjectMapper().readValue(((BasicJsonSchema) schema).get(&quot;properties&quot;)</span>
+<span class="nc" id="L184">                    .getValueAsJson().asJsonObject().toString(), Map.class))).keySet());</span>
+           
+<span class="nc bnc" id="L186" title="All 4 branches missed.">           if(null != config &amp;&amp; config.hasPath(&quot;external.properties&quot;)) </span>
+<span class="nc" id="L187">               propsList.addAll(config.getObject(&quot;external.properties&quot;).keySet());</span>
+           
+<span class="nc bnc" id="L189" title="All 4 branches missed.">           if(null != config &amp;&amp; config.hasPath(&quot;relations&quot;)) </span>
+<span class="nc" id="L190">               propsList.addAll(config.getObject(&quot;relations&quot;).keySet());</span>
+
+<span class="nc bnc" id="L192" title="All 4 branches missed.">            if(null != config &amp;&amp; config.hasPath(&quot;edge.properties&quot;))</span>
+<span class="nc" id="L193">                propsList.addAll(config.getObject(&quot;edge.properties&quot;).keySet());</span>
+<span class="nc" id="L194">            propsList.addAll(Arrays.asList(&quot;objectType&quot;, &quot;identifier&quot;, &quot;languageCode&quot;));</span>
+<span class="nc" id="L195">        } catch (IOException e) {</span>
+<span class="nc" id="L196">            e.printStackTrace();</span>
+<span class="nc" id="L197">        }</span>
+<span class="nc" id="L198">        return propsList;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

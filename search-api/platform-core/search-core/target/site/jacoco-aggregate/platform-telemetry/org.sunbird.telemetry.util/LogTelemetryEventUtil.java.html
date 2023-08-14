@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>LogTelemetryEventUtil.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">search-core</a> &gt; <a href="../index.html" class="el_bundle">platform-telemetry</a> &gt; <a href="index.source.html" class="el_package">org.sunbird.telemetry.util</a> &gt; <span class="el_source">LogTelemetryEventUtil.java</span></div><h1>LogTelemetryEventUtil.java</h1><pre class="source lang-java linenums">package org.sunbird.telemetry.util;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.sunbird.common.dto.Request;
+import org.sunbird.telemetry.dto.TelemetryBEEvent;
+import org.sunbird.telemetry.dto.TelemetryBJREvent;
+import org.sunbird.telemetry.logger.TelemetryManager;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Map;
+import java.util.UUID;
+
+<span class="nc" id="L17">public class LogTelemetryEventUtil {</span>
+
+	
+<span class="nc" id="L20">	private static final Logger telemetryEventLogger = LoggerFactory.getLogger(&quot;TelemetryEventLogger&quot;);</span>
+<span class="nc" id="L21">	private static ObjectMapper mapper = new ObjectMapper();</span>
+<span class="nc" id="L22">	private static String beJobRequesteventId = &quot;BE_JOB_REQUEST&quot;;</span>
+<span class="nc" id="L23">	private static int iteration = 1;</span>
+	
+	public static String logInstructionEvent(Map&lt;String,Object&gt; actor, Map&lt;String,Object&gt; context, Map&lt;String,Object&gt; object, Map&lt;String,Object&gt; edata) {
+		
+<span class="nc" id="L27">		TelemetryBJREvent te = new TelemetryBJREvent();</span>
+<span class="nc" id="L28">		long unixTime = System.currentTimeMillis();</span>
+<span class="nc" id="L29">		String mid = &quot;LP.&quot;+System.currentTimeMillis()+&quot;.&quot;+UUID.randomUUID();</span>
+<span class="nc" id="L30">		edata.put(&quot;iteration&quot;, iteration);</span>
+		
+<span class="nc" id="L32">		te.setEid(beJobRequesteventId);</span>
+<span class="nc" id="L33">		te.setEts(unixTime);</span>
+<span class="nc" id="L34">		te.setMid(mid);</span>
+<span class="nc" id="L35">		te.setActor(actor);</span>
+<span class="nc" id="L36">		te.setContext(context);</span>
+<span class="nc" id="L37">		te.setObject(object);</span>
+<span class="nc" id="L38">		te.setEdata(edata);</span>
+		
+<span class="nc" id="L40">		String jsonMessage = null;</span>
+		try {
+<span class="nc" id="L42">			jsonMessage = mapper.writeValueAsString(te);</span>
+<span class="nc" id="L43">		} catch (Exception e) {</span>
+<span class="nc" id="L44">			TelemetryManager.error(&quot;Error logging BE_JOB_REQUEST event: &quot; + e.getMessage(), e);</span>
+<span class="nc" id="L45">		}</span>
+<span class="nc" id="L46">		return jsonMessage;</span>
+	}
+
+	public static String logContentSearchEvent(String query, Object filters, Object sort, String correlationId, int size, Request req) {
+<span class="nc" id="L50">		TelemetryBEEvent te = new TelemetryBEEvent();</span>
+<span class="nc" id="L51">		String jsonMessage = null;</span>
+<span class="nc" id="L52">		String mid = &quot;LP.&quot;+System.currentTimeMillis()+&quot;.&quot;+UUID.randomUUID();</span>
+		try {
+<span class="nc" id="L54">			long unixTime = System.currentTimeMillis();</span>
+<span class="nc" id="L55">			te.setEid(&quot;BE_CONTENT_SEARCH&quot;);</span>
+<span class="nc" id="L56">			te.setEts(unixTime);</span>
+<span class="nc" id="L57">			te.setMid(mid);</span>
+<span class="nc" id="L58">			te.setVer(&quot;2.0&quot;);</span>
+<span class="nc bnc" id="L59" title="All 6 branches missed.">			if(null != req &amp;&amp; null != req.getParams() &amp;&amp; !StringUtils.isBlank(req.getParams().getDid())){</span>
+<span class="nc" id="L60">				te.setPdata(&quot;org.sunbird.search.platform&quot;,req.getParams().getDid() , &quot;1.0&quot;, &quot;&quot;);</span>
+			}else {
+<span class="nc" id="L62">				te.setPdata(&quot;org.sunbird.search.platform&quot;,&quot;&quot; , &quot;1.0&quot;, &quot;&quot;);</span>
+			}
+<span class="nc" id="L64">			te.setEdata(query, filters, sort, correlationId, size);</span>
+	
+<span class="nc" id="L66">			jsonMessage = mapper.writeValueAsString(te);</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">			if (StringUtils.isNotBlank(jsonMessage))</span>
+<span class="nc" id="L68">				telemetryEventLogger.info(jsonMessage);</span>
+<span class="nc" id="L69">		} catch (Exception e) {</span>
+<span class="nc" id="L70">			TelemetryManager.error(&quot;Error logging BE_CONTENT_LIFECYCLE event: &quot; + e.getMessage(), e);</span>
+<span class="nc" id="L71">		}</span>
+<span class="nc" id="L72">		return jsonMessage;</span>
+	}
+	
+	public static String getMD5Hash(TelemetryBEEvent event, Map&lt;String,Object&gt; data){
+<span class="nc" id="L76">		MessageDigest digest = null;</span>
+		try {
+<span class="nc" id="L78">			String id = (String)data.get(&quot;id&quot;);</span>
+<span class="nc" id="L79">			String state = (String)data.get(&quot;state&quot;);</span>
+<span class="nc" id="L80">			String prevstate = (String)data.get(&quot;prevstate&quot;);</span>
+<span class="nc" id="L81">			String val = event.getEid()+event.getEts()+id+state+prevstate;</span>
+<span class="nc" id="L82">			digest = MessageDigest.getInstance(&quot;MD5&quot;);</span>
+<span class="nc" id="L83">			digest.update(val.getBytes());</span>
+<span class="nc" id="L84">			byte[] digestMD5 = digest.digest();</span>
+<span class="nc" id="L85">			StringBuffer mid_val = new StringBuffer();</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">			for(byte bytes : digestMD5){</span>
+<span class="nc" id="L87">				mid_val.append(String.format(&quot;%02x&quot;, bytes &amp; 0xff));</span>
+			}
+<span class="nc" id="L89">			String messageId = &quot;LP:&quot;+mid_val;</span>
+<span class="nc" id="L90">			return messageId;</span>
+<span class="nc" id="L91">		} catch (NoSuchAlgorithmException e) {</span>
+<span class="nc" id="L92">			e.printStackTrace();</span>
+		}
+<span class="nc" id="L94">		return null;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

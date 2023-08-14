@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>RequestParams.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">search-core</a> &gt; <a href="../index.html" class="el_bundle">platform-common</a> &gt; <a href="index.source.html" class="el_package">org.sunbird.common.dto</a> &gt; <span class="el_source">RequestParams.java</span></div><h1>RequestParams.java</h1><pre class="source lang-java linenums">package org.sunbird.common.dto;
+
+import java.io.Serializable;
+
+/**
+ * 
+ * @author rayulu
+ * 
+ */
+<span class="nc" id="L10">public class RequestParams implements Serializable {</span>
+
+    private static final long serialVersionUID = -759588115950763188L;
+
+    private String did;
+    private String key;
+    private String msgid;
+    private String uid;
+    private String cid;
+    private String sid;
+
+    public String getUid() {
+<span class="nc" id="L22">		return uid;</span>
+	}
+
+	public void setUid(String uid) {
+<span class="nc" id="L26">		this.uid = uid;</span>
+<span class="nc" id="L27">	}</span>
+
+	public String getDid() {
+<span class="nc" id="L30">        return did;</span>
+    }
+
+    public void setDid(String did) {
+<span class="nc" id="L34">        this.did = did;</span>
+<span class="nc" id="L35">    }</span>
+
+    public String getKey() {
+<span class="nc" id="L38">        return key;</span>
+    }
+
+    public void setKey(String key) {
+<span class="nc" id="L42">        this.key = key;</span>
+<span class="nc" id="L43">    }</span>
+
+    public String getMsgid() {
+<span class="nc" id="L46">        return msgid;</span>
+    }
+
+    public void setMsgid(String msgid) {
+<span class="nc" id="L50">        this.msgid = msgid;</span>
+<span class="nc" id="L51">    }</span>
+
+	public String getCid() {
+<span class="nc" id="L54">		return cid;</span>
+	}
+
+	public void setCid(String cid) {
+<span class="nc" id="L58">		this.cid = cid;</span>
+<span class="nc" id="L59">	}</span>
+
+	public String getSid() {
+<span class="nc" id="L62">		return sid;</span>
+	}
+
+	public void setSid(String sid) {
+<span class="nc" id="L66">		this.sid = sid;</span>
+<span class="nc" id="L67">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,17 @@
+/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/platform-core/platform-telemetry/src/main/java/org/sunbird/telemetry/util/TelemetryAccessEventUtil.java
+/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/platform-core/platform-telemetry/src/main/java/org/sunbird/telemetry/dto/Actor.java
+/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/platform-core/platform-telemetry/src/main/java/org/sunbird/telemetry/handler/TelemetryLoggingHandler.java
+/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/platform-core/platform-telemetry/src/main/java/org/sunbird/telemetry/util/LogAsyncGraphEvent.java
+/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/platform-core/platform-telemetry/src/main/java/org/sunbird/telemetry/TelemetryGenerator.java
+/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/platform-core/platform-telemetry/src/main/java/org/sunbird/telemetry/dto/Target.java
+/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/platform-core/platform-telemetry/src/main/java/org/sunbird/telemetry/dto/Parent.java
+/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/platform-core/platform-telemetry/src/main/java/org/sunbird/telemetry/handler/Level.java
+/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/platform-core/platform-telemetry/src/main/java/org/sunbird/telemetry/dto/TelemetryBJREvent.java
+/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/platform-core/platform-telemetry/src/main/java/org/sunbird/telemetry/logger/TelemetryManager.java
+/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/platform-core/platform-telemetry/src/main/java/org/sunbird/telemetry/dto/TelemetryBEEvent.java
+/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/platform-core/platform-telemetry/src/main/java/org/sunbird/telemetry/TelemetryParams.java
+/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/platform-core/platform-telemetry/src/main/java/org/sunbird/telemetry/dto/Context.java
+/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/platform-core/platform-telemetry/src/main/java/org/sunbird/telemetry/dto/Producer.java
+/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/platform-core/platform-telemetry/src/main/java/org/sunbird/telemetry/handler/TelemetryHandler.java
+/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/platform-core/platform-telemetry/src/main/java/org/sunbird/telemetry/dto/Telemetry.java
+/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/platform-core/platform-telemetry/src/main/java/org/sunbird/telemetry/util/LogTelemetryEventUtil.java

@@ -1,0 +1,9 @@
+org/sunbird/schema/dto/ValidationResult.class
+org/sunbird/schema/SchemaValidatorFactory.class
+org/sunbird/schema/ISchemaValidator.class
+org/sunbird/schema/impl/JsonSchemaValidator.class
+org/sunbird/schema/impl/CustomProblemHandler.class
+org/sunbird/schema/formatter/UrlFormatter.class
+org/sunbird/schema/impl/BaseSchemaValidator.class
+org/sunbird/schema/TestSchemaValidator.class
+org/sunbird/schema/formatter/JsonFormatter.class

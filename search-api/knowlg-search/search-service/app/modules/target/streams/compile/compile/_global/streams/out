@@ -1,0 +1,46 @@
+[0m[[0m[31merror[0m] [0m[0m/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/search/app/modules/SearchModule.scala:3:12: object google is not a member of package com[0m
+[0m[[0m[31merror[0m] [0m[0mimport com.google.inject.AbstractModule[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/search/app/modules/SearchModule.scala:4:8: not found: object actors[0m
+[0m[[0m[31merror[0m] [0m[0mimport actors.{HealthActor, SearchActor}[0m
+[0m[[0m[31merror[0m] [0m[0m       ^[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/search/app/modules/SearchModule.scala:5:12: object sunbird is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.sunbird.telemetry.TelemetryGenerator[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/search/app/modules/SearchModule.scala:6:8: not found: object play[0m
+[0m[[0m[31merror[0m] [0m[0mimport play.libs.akka.AkkaGuiceSupport[0m
+[0m[[0m[31merror[0m] [0m[0m       ^[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/search/app/modules/SearchModule.scala:7:8: not found: object utils[0m
+[0m[[0m[31merror[0m] [0m[0mimport utils.ActorNames[0m
+[0m[[0m[31merror[0m] [0m[0m       ^[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/search/app/modules/SearchModule.scala:9:28: not found: type AbstractModule[0m
+[0m[[0m[31merror[0m] [0m[0mclass SearchModule extends AbstractModule with AkkaGuiceSupport {[0m
+[0m[[0m[31merror[0m] [0m[0m                           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/search/app/modules/SearchModule.scala:9:48: not found: type AkkaGuiceSupport[0m
+[0m[[0m[31merror[0m] [0m[0mclass SearchModule extends AbstractModule with AkkaGuiceSupport {[0m
+[0m[[0m[31merror[0m] [0m[0m                                               ^[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/search/app/modules/SearchModule.scala:12:15: value configure is not a member of AnyRef[0m
+[0m[[0m[31merror[0m] [0m[0m        super.configure()[0m
+[0m[[0m[31merror[0m] [0m[0m              ^[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/search/app/modules/SearchModule.scala:13:9: not found: value bindActor[0m
+[0m[[0m[31merror[0m] [0m[0m        bindActor(classOf[HealthActor], ActorNames.HEALTH_ACTOR)[0m
+[0m[[0m[31merror[0m] [0m[0m        ^[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/search/app/modules/SearchModule.scala:13:27: not found: type HealthActor[0m
+[0m[[0m[31merror[0m] [0m[0m        bindActor(classOf[HealthActor], ActorNames.HEALTH_ACTOR)[0m
+[0m[[0m[31merror[0m] [0m[0m                          ^[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/search/app/modules/SearchModule.scala:13:41: not found: value ActorNames[0m
+[0m[[0m[31merror[0m] [0m[0m        bindActor(classOf[HealthActor], ActorNames.HEALTH_ACTOR)[0m
+[0m[[0m[31merror[0m] [0m[0m                                        ^[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/search/app/modules/SearchModule.scala:14:9: not found: value bindActor[0m
+[0m[[0m[31merror[0m] [0m[0m        bindActor(classOf[SearchActor], ActorNames.SEARCH_ACTOR)[0m
+[0m[[0m[31merror[0m] [0m[0m        ^[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/search/app/modules/SearchModule.scala:14:27: not found: type SearchActor[0m
+[0m[[0m[31merror[0m] [0m[0m        bindActor(classOf[SearchActor], ActorNames.SEARCH_ACTOR)[0m
+[0m[[0m[31merror[0m] [0m[0m                          ^[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/search/app/modules/SearchModule.scala:14:41: not found: value ActorNames[0m
+[0m[[0m[31merror[0m] [0m[0m        bindActor(classOf[SearchActor], ActorNames.SEARCH_ACTOR)[0m
+[0m[[0m[31merror[0m] [0m[0m                                        ^[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/shouryasolanki/work1/sunbird/knowledge/knowlg-search/search/app/modules/SearchModule.scala:15:9: not found: value TelemetryGenerator[0m
+[0m[[0m[31merror[0m] [0m[0m        TelemetryGenerator.setComponent("search-service")[0m
+[0m[[0m[31merror[0m] [0m[0m        ^[0m
+[0m[[0m[31merror[0m] [0m[0m15 errors found[0m

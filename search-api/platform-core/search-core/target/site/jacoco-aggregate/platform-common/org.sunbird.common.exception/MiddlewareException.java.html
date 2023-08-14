@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>MiddlewareException.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">search-core</a> &gt; <a href="../index.html" class="el_bundle">platform-common</a> &gt; <a href="index.source.html" class="el_package">org.sunbird.common.exception</a> &gt; <span class="el_source">MiddlewareException.java</span></div><h1>MiddlewareException.java</h1><pre class="source lang-java linenums">package org.sunbird.common.exception;
+
+import java.text.MessageFormat;
+import java.util.List;
+
+/**
+ * Base class for middleware exceptions. Provides the support for returning error
+ * code and error message. Each middleware operation should define appropriate 
+ * error codes to convey the meaning of the exception. This class mandates the
+ * error code parameter in all its constructors. 
+ * 
+ * @author Feroz
+ */
+public class MiddlewareException extends RuntimeException {
+    
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3866941321932941766L;
+	private String errCode;
+	private List&lt;String&gt; messages;
+    
+    /**
+     * Initializes the middleware exception with a given error code and message.
+     * @param errCode Error code from the service
+     * @param message Error message (static). For parameter substitution use the other constructor
+     */
+    public MiddlewareException(String errCode, String message) {
+<span class="nc" id="L29">        super(message);</span>
+<span class="nc" id="L30">        this.errCode = errCode;</span>
+<span class="nc" id="L31">    }</span>
+
+    public MiddlewareException(String errCode, String commonMessage, List&lt;String&gt; messages) {
+<span class="nc" id="L34">        super(commonMessage);</span>
+<span class="nc" id="L35">        this.errCode = errCode;</span>
+<span class="nc" id="L36">        this.messages = messages;</span>
+<span class="nc" id="L37">    }</span>
+
+    /**
+     * Initializes the middleware exception with a template message 
+     * @param errCode Error code from the service
+     * @param message Error message, which conforms to the java.text.MessageFormat spec
+     * @param params Parameters substituted in the message string
+     */
+    public MiddlewareException(String errCode, String message, Object... params) {
+<span class="nc" id="L46">        super(MessageFormat.format(message, params));</span>
+<span class="nc" id="L47">        this.errCode = errCode;</span>
+<span class="nc" id="L48">    }</span>
+
+    /**
+     * Initializes the middleware exception with a template message 
+     * @param errCode Error code from the service
+     * @param message Error message 
+     * @param root Root cause exception
+     */
+    public MiddlewareException(String errCode, String message, Throwable root) {
+<span class="nc" id="L57">        super(message, root);</span>
+<span class="nc" id="L58">        this.errCode = errCode;</span>
+<span class="nc" id="L59">    }</span>
+    
+    /**
+     * Initializes the middleware exception with a template message 
+     * @param errCode Error code from the service
+     * @param root Root cause of the exception
+     * @param message Error message, which conforms to the java.text.MessageFormat spec
+     * @param params Parameters substituted in the message string
+     */
+    public MiddlewareException(String errCode, String message, Throwable root, Object... params) {
+<span class="nc" id="L69">        super(MessageFormat.format(message, params), root);</span>
+<span class="nc" id="L70">        this.errCode = errCode;</span>
+<span class="nc" id="L71">    }</span>
+
+    /**
+     * @return the errCode
+     */
+    public String getErrCode() {
+<span class="nc" id="L77">        return errCode;</span>
+    }
+    
+    public ResponseCode getResponseCode() {
+<span class="nc" id="L81">        return ResponseCode.SERVER_ERROR;</span>
+    }
+
+    public List&lt;String&gt; getMessages() {
+<span class="nc" id="L85">        return messages;</span>
+    }
+    
+    @Override
+    public String toString() {
+<span class="nc" id="L90">        StringBuilder builder = new StringBuilder();</span>
+<span class="nc" id="L91">        builder.append(errCode).append(&quot;: &quot;);</span>
+<span class="nc" id="L92">        builder.append(super.getMessage());</span>
+<span class="nc" id="L93">        return builder.toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

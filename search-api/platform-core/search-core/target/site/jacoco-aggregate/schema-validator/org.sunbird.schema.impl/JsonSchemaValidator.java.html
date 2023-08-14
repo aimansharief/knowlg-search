@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>JsonSchemaValidator.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">search-core</a> &gt; <a href="../index.html" class="el_bundle">schema-validator</a> &gt; <a href="index.source.html" class="el_package">org.sunbird.schema.impl</a> &gt; <span class="el_source">JsonSchemaValidator.java</span></div><h1>JsonSchemaValidator.java</h1><pre class="source lang-java linenums">package org.sunbird.schema.impl;
+
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
+import org.apache.commons.lang3.StringUtils;
+import org.leadpony.justify.api.JsonSchema;
+import org.sunbird.common.Platform;
+
+import java.io.File;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+
+public class JsonSchemaValidator extends BaseSchemaValidator {
+
+<span class="nc bnc" id="L19" title="All 4 branches missed.">    private String basePath = Platform.config.hasPath(&quot;schema.base_path&quot;) ? Platform.config.getString(&quot;schema.base_path&quot;) : &quot;https://sunbirddev.blob.core.windows.net/sunbird-content-dev/schemas/local/&quot;;</span>
+
+    public JsonSchemaValidator(String name, String version) throws Exception {
+<span class="nc" id="L22">        super(name, version);</span>
+<span class="nc" id="L23">        basePath = basePath + File.separator + name.toLowerCase() + File.separator + version + File.separator;</span>
+<span class="nc" id="L24">        loadSchema();</span>
+<span class="nc" id="L25">        loadConfig();</span>
+<span class="nc" id="L26">    }</span>
+
+    public JsonSchemaValidator(String name, String version, String configfallback) throws Exception {
+<span class="nc" id="L29">        super(name, version);</span>
+<span class="nc" id="L30">        loadSchema();</span>
+<span class="nc" id="L31">        loadConfig(name, version, configfallback);</span>
+<span class="nc" id="L32">    }</span>
+
+    private void loadSchema() throws Exception {
+<span class="nc" id="L35">        System.out.println(&quot;Schema path: &quot; + basePath + &quot;schema.json&quot;);</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">        if(basePath.startsWith(&quot;http&quot;)){</span>
+<span class="nc" id="L37">            InputStream stream = new URL( basePath + &quot;schema.json&quot;).openStream();</span>
+<span class="nc" id="L38">            this.schema = readSchema(stream);</span>
+<span class="nc" id="L39">        }else {</span>
+<span class="nc" id="L40">            Path schemaPath = new File( basePath + &quot;schema.json&quot;).toPath();</span>
+<span class="nc" id="L41">            this.schema = readSchema(schemaPath);</span>
+        }
+<span class="nc" id="L43">    }</span>
+
+    private void loadConfig() throws Exception {
+<span class="nc" id="L46">        System.out.println(&quot;Config path: &quot; + basePath + &quot;config.json&quot;);</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        if(basePath.startsWith(&quot;http&quot;)){</span>
+<span class="nc" id="L48">            this.config = ConfigFactory.parseURL(new URL( basePath + &quot;config.json&quot;));</span>
+        } else {
+<span class="nc" id="L50">            File configFile = new File(basePath + &quot;config.json&quot;);</span>
+<span class="nc" id="L51">            this.config = ConfigFactory.parseFile(configFile);</span>
+        }
+<span class="nc" id="L53">    }</span>
+
+    private void loadConfig(String name, String version, String fallbackPath) throws Exception {
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        if(StringUtils.isEmpty(fallbackPath))</span>
+<span class="nc" id="L57">            loadConfig();</span>
+        else {
+<span class="nc" id="L59">            Config fallbackConfig = ConfigFactory.parseURL(new URL(basePath + fallbackPath.toLowerCase() + &quot;/&quot; + version + &quot;/&quot; +  &quot;config.json&quot;));</span>
+<span class="nc" id="L60">            basePath = basePath + name.toLowerCase() + &quot;/&quot; + version + &quot;/&quot;;</span>
+<span class="nc" id="L61">            this.config = ConfigFactory.parseURL(new URL( basePath + &quot;config.json&quot;)).withFallback(fallbackConfig);</span>
+        }
+<span class="nc" id="L63">    }</span>
+
+
+    /**
+     * Resolves the referenced JSON schemas.
+     *
+     * @param id the identifier of the referenced JSON schemas.
+     * @return referenced JSON schemas.
+     */
+    public JsonSchema resolveSchema(URI id) {
+        // The schema is available in the local filesystem.
+//        try {
+//            Path path = Paths.get( getClass().getClassLoader().getResource(basePath + id.getPath()).toURI());
+//            return readSchema(path);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+<span class="nc" id="L80">        return null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

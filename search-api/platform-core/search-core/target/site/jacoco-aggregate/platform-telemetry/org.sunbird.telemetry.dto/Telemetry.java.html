@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>Telemetry.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">search-core</a> &gt; <a href="../index.html" class="el_bundle">platform-telemetry</a> &gt; <a href="index.source.html" class="el_package">org.sunbird.telemetry.dto</a> &gt; <span class="el_source">Telemetry.java</span></div><h1>Telemetry.java</h1><pre class="source lang-java linenums">package org.sunbird.telemetry.dto;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+/**
+ * Telemetry V3 POJO to generate telemetry event.
+ * 
+ * @author mahesh
+ *
+ */
+
+@JsonInclude(Include.NON_NULL)
+public class Telemetry {
+
+	private String eid;
+<span class="nc" id="L21">	private long ets = System.currentTimeMillis();</span>
+<span class="nc" id="L22">	private String ver = &quot;3.0&quot;;</span>
+<span class="nc" id="L23">	private String mid = &quot;LP.&quot; + System.currentTimeMillis() + &quot;.&quot; + UUID.randomUUID();;</span>
+	private Actor actor;
+	private Context context;
+	private Target object;
+	private Map&lt;String, Object&gt; edata;
+	private List&lt;Map&lt;String, Object&gt;&gt; cdata;
+	private List&lt;String&gt; tags;
+<span class="nc" id="L30">	private Long syncts = ets;</span>
+
+	/**
+	 * @param eid
+	 * @param ets
+	 * @param ver
+	 * @param actor
+	 * @param context
+	 * @param edata
+	 */
+	public Telemetry(String eid, long ets, String ver, Actor actor, Context context, Map&lt;String, Object&gt; edata) {
+<span class="nc" id="L41">		super();</span>
+<span class="nc" id="L42">		this.eid = eid;</span>
+<span class="nc" id="L43">		this.ets = ets;</span>
+<span class="nc" id="L44">		this.ver = ver;</span>
+<span class="nc" id="L45">		this.actor = actor;</span>
+<span class="nc" id="L46">		this.context = context;</span>
+<span class="nc" id="L47">		this.edata = edata;</span>
+<span class="nc" id="L48">		this.syncts = ets;</span>
+<span class="nc" id="L49">	}</span>
+
+	/**
+	 * @param eid
+	 * @param actor
+	 * @param context
+	 * @param edata
+	 */
+	public Telemetry(String eid, Actor actor, Context context, Map&lt;String, Object&gt; edata) {
+<span class="nc" id="L58">		super();</span>
+<span class="nc" id="L59">		this.eid = eid;</span>
+<span class="nc" id="L60">		this.actor = actor;</span>
+<span class="nc" id="L61">		this.context = context;</span>
+<span class="nc" id="L62">		this.edata = edata;</span>
+<span class="nc" id="L63">	}</span>
+
+	/**
+	 * @param eid
+	 * @param actor
+	 * @param context
+	 * @param edata
+	 * @param cdata
+	 */
+	public Telemetry(String eid, Actor actor, Context context, Map&lt;String, Object&gt; edata,
+			List&lt;Map&lt;String, Object&gt;&gt; cdata) {
+<span class="nc" id="L74">		super();</span>
+<span class="nc" id="L75">		this.eid = eid;</span>
+<span class="nc" id="L76">		this.actor = actor;</span>
+<span class="nc" id="L77">		this.context = context;</span>
+<span class="nc" id="L78">		this.edata = edata;</span>
+<span class="nc" id="L79">		this.cdata = cdata;</span>
+<span class="nc" id="L80">	}</span>
+
+	/**
+	 * @return the eid
+	 */
+	public String getEid() {
+<span class="nc" id="L86">		return eid;</span>
+	}
+
+	/**
+	 * @param eid
+	 *            the eid to set
+	 */
+	public void setEid(String eid) {
+<span class="nc" id="L94">		this.eid = eid;</span>
+<span class="nc" id="L95">	}</span>
+
+	/**
+	 * @return the ets
+	 */
+	public long getEts() {
+<span class="nc" id="L101">		return ets;</span>
+	}
+
+	/**
+	 * @param ets
+	 *            the ets to set
+	 */
+	public void setEts(long ets) {
+<span class="nc" id="L109">		this.ets = ets;</span>
+<span class="nc" id="L110">	}</span>
+
+	/**
+	 * @return the ver
+	 */
+	public String getVer() {
+<span class="nc" id="L116">		return ver;</span>
+	}
+
+	/**
+	 * @param ver
+	 *            the ver to set
+	 */
+	public void setVer(String ver) {
+<span class="nc" id="L124">		this.ver = ver;</span>
+<span class="nc" id="L125">	}</span>
+
+	/**
+	 * @return the mid
+	 */
+	public String getMid() {
+<span class="nc" id="L131">		return mid;</span>
+	}
+
+	/**
+	 * @param mid
+	 *            the mid to set
+	 */
+	public void setMid(String mid) {
+<span class="nc" id="L139">		this.mid = mid;</span>
+<span class="nc" id="L140">	}</span>
+
+	/**
+	 * @return the actor
+	 */
+	public Actor getActor() {
+<span class="nc" id="L146">		return actor;</span>
+	}
+
+	/**
+	 * @param actor
+	 *            the actor to set
+	 */
+	public void setActor(Actor actor) {
+<span class="nc" id="L154">		this.actor = actor;</span>
+<span class="nc" id="L155">	}</span>
+
+	/**
+	 * @return the context
+	 */
+	public Context getContext() {
+<span class="nc" id="L161">		return context;</span>
+	}
+
+	/**
+	 * @param context
+	 *            the context to set
+	 */
+	public void setContext(Context context) {
+<span class="nc" id="L169">		this.context = context;</span>
+<span class="nc" id="L170">	}</span>
+
+	/**
+	 * @return the object
+	 */
+	public Target getObject() {
+<span class="nc" id="L176">		return object;</span>
+	}
+
+	/**
+	 * @param object
+	 *            the object to set
+	 */
+	public void setObject(Target object) {
+<span class="nc" id="L184">		this.object = object;</span>
+<span class="nc" id="L185">	}</span>
+
+	/**
+	 * @return the edata
+	 */
+	public Map&lt;String, Object&gt; getEdata() {
+<span class="nc" id="L191">		return edata;</span>
+	}
+
+	/**
+	 * @param edata
+	 *            the edata to set
+	 */
+	public void setEdata(Map&lt;String, Object&gt; edata) {
+<span class="nc" id="L199">		this.edata = edata;</span>
+<span class="nc" id="L200">	}</span>
+
+	/**
+	 * @return the tags
+	 */
+	public List&lt;String&gt; getTags() {
+<span class="nc" id="L206">		return tags;</span>
+	}
+
+	/**
+	 * @param tags
+	 *            the tags to set
+	 */
+	public void setTags(List&lt;String&gt; tags) {
+<span class="nc" id="L214">		this.tags = tags;</span>
+<span class="nc" id="L215">	}</span>
+
+	/**
+	 * @return cdata
+	 */
+	public List&lt;Map&lt;String, Object&gt;&gt; getCdata() {
+<span class="nc" id="L221">		return cdata;</span>
+	}
+
+	/**
+	 * @param cdata
+	 */
+	public void setCdata(List&lt;Map&lt;String, Object&gt;&gt; cdata) {
+<span class="nc" id="L228">		this.cdata = cdata;</span>
+<span class="nc" id="L229">	}</span>
+
+	/**
+	 * @return Long
+	 */
+	public Long getSyncts() {
+<span class="nc" id="L235">		return syncts;</span>
+	}
+
+	/**
+	 * @param syncts
+	 */
+	public void setSyncts(Long syncts) {
+<span class="nc" id="L242">		this.syncts = syncts;</span>
+<span class="nc" id="L243">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
