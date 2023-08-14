@@ -28,6 +28,9 @@ jobs:
       - name: Change directory
         run: cd search-api
 
+      - name: List the files
+        run: ls
+        
       - name: Build the project
         run: |
           mvn clean install -DskipTests
