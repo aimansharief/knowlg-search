@@ -24,6 +24,7 @@ lazy val searchService = (project in file("search-service"))
     commonSettings,
     libraryDependencies ++= Seq(
       guice,
+      "javax.inject" % "javax.inject" % "1",
       "org.sunbird" % "actor-core" % "1.0-SNAPSHOT",
       "org.sunbird" % "search-core" % "1.0-SNAPSHOT",
       "org.joda" % "joda-convert" % "2.1.2",
@@ -33,6 +34,10 @@ lazy val searchService = (project in file("search-service"))
       "net.codingwell" %% "scala-guice" % "4.2.5",
       "com.typesafe.play" %% "play-specs2" % "2.7.9",
       "io.netty" % "netty-transport-native-epoll" % "4.1.60.Final",
+      "com.typesafe.akka" %% "akka-testkit" % "2.5.22" % "test",
+      "org.javassist" % "javassist" % "3.24.0-GA" % "test",
+      "org.powermock" % "powermock-api-mockito2" % "2.0.9" % "test",
+      "org.powermock" % "powermock-module-junit4" % "2.0.9" % "test",
       "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.3" % Test,
       "org.scalatest" % ("scalatest_" + scalaMajorVersion) % "3.1.2" % Test
     )
