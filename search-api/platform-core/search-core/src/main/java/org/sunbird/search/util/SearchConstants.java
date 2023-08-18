@@ -3,6 +3,11 @@ package org.sunbird.search.util;
 import org.sunbird.common.Platform;
 
 public class SearchConstants {
+    public static final String CREATED_ON = "createdOn";
+    public static final String OPERATION = "operation";
+    public static final String AUDIT_HISTORY_INDEX_TYPE = "ah";
+    public static final String objectId = "objectId";
+    public static final String traversal = "traversal";
     public static String COMPOSITE_SEARCH_INDEX = Platform.config.hasPath("compositesearch.index.name") ? Platform.config.getString("compositesearch.index.name"): "compositesearch";
     public static final String COMPOSITE_SEARCH_INDEX_TYPE = "cs";
     public static final String OPERATION_CREATE = "CREATE";
