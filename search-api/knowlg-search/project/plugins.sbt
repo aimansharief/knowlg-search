@@ -12,3 +12,5 @@ addSbtPlugin("io.gatling" % "gatling-sbt" % "3.0.0")
 addSbtPlugin("com.lucidchart" % "sbt-scalafmt" % "1.15")
 
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.8.1")
+
+addSbtPlugin("com.github.sbt" % "sbt-jacoco" % "3.2.0")
