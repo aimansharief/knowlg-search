@@ -16,7 +16,7 @@ lazy val root = (project in file("."))
   )
 
 lazy val searchService = (project in file("search-service"))
-  .enablePlugins(PlayScala, PlayNettyServer)
+  .enablePlugins(PlayScala, PlayNettyServer, JacocoPlugin)
   .disablePlugins(PlayAkkaHttpServer)
   .settings(
     name := "search-service",
