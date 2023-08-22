@@ -71,4 +71,4 @@ jobs:
           path: ~/test-results
       - name: Run SonarQube analysis
         run: |
-          mvn -X sonar:sonar -Dlog4j.configuration=./logs sonar:sonar -Dsonar.projectKey=project-knowlg-search -Dsonar.organization=project-Sunbird-Knowlg -Dsonar.host.url=https://sonarcloud.io -Dsonar.exclusions=**/cert-processor/** -Dsonar.scala.coverage.reportPaths=/home/runner/work/knowlg-search/knowlg-search/target/scoverage.xml
+          mvn -X sonar:sonar -Dlog4j.configuration=./logs sonar:sonar -Dsonar.projectKey=project-knowlg-search -Dsonar.organization=project-Sunbird-Knowlg -Dsonar.host.url=https://sonarcloud.io -Dsonar.exclusions=**/cert-processor/** -Dsonar.scala.coverage.reportPaths=/home/runner/work/knowlg-search/knowlg-search/search-job/target/scoverage.xml
