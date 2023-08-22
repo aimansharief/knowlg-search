@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ~/search-job/
+        working-directory: ./search-job/
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -71,4 +71,4 @@ jobs:
           path: ~/test-results
       - name: Run SonarQube analysis
         run: |
-          mvn -X sonar:sonar -Dlog4j.configuration=./logs sonar:sonar -Dsonar.projectKey=project-sunbird_knowledge-platform-jobs -Dsonar.organization=project-sunbird -Dsonar.host.url=https://sonarcloud.io -Dsonar.exclusions=**/cert-processor/** -Dsonar.scala.coverage.reportPaths=/home/runner/work/kp/kp/target/scoverage.xml
+          mvn -X sonar:sonar -Dlog4j.configuration=./logs sonar:sonar -Dsonar.projectKey=project-knowlg-search -Dsonar.organization=project-Sunbird-Knowlg -Dsonar.host.url=https://sonarcloud.io -Dsonar.exclusions=**/cert-processor/** -Dsonar.scala.coverage.reportPaths=/home/runner/work/knowlg-search/knowlg-search/target/scoverage.xml
