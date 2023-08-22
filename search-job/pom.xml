@@ -13,9 +13,9 @@
 	<artifactId>search-job</artifactId>
 	<version>1.0</version>
 	<packaging>pom</packaging>
-	<name>Knowledge Platform Jobs</name>
+	<name>Knowlg Search Jobs</name>
 	<description>
-		KP Flink jobs for stream processing
+		KS Flink jobs for stream processing
 	</description>
 	<url>https://sunbird.org/</url>
 
