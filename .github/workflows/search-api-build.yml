@@ -75,7 +75,7 @@ jobs:
       - name: Setup environment and run tests
         run: |
           cd search-api/
-          ls
+          echo vmsetup.sh
           bash vmsetup.sh
 
       - name: Save test results
