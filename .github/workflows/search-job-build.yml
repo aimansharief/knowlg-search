@@ -69,4 +69,5 @@ jobs:
           path: ~/test-results
       - name: Run SonarQube analysis
         run: |
+          cd ../search-job/
           mvn -X sonar:sonar -Dlog4j.configuration=./logs sonar:sonar -Dsonar.projectKey=project-sunbird_knowledge-platform-jobs -Dsonar.organization=project-sunbird -Dsonar.host.url=https://sonarcloud.io -Dsonar.exclusions=**/cert-processor/** -Dsonar.scala.coverage.reportPaths=/home/runner/work/kp/kp/target/scoverage.xml
