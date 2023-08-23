@@ -70,5 +70,7 @@ jobs:
           name: test-results
           path: ~/test-results
       - name: Run SonarQube analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           mvn -X sonar:sonar -Dlog4j.configuration=./logs sonar:sonar -Dsonar.projectKey=Sunbird-Knowlg_knowlg-search -Dsonar.organization=sunbird-knowlg-1 -Dsonar.host.url=https://sonarcloud.io -Dsonar.exclusions=**/cert-processor/** -Dsonar.scala.coverage.reportPaths=/home/runner/work/knowlg-search/knowlg-search/search-job/target/scoverage.xml
