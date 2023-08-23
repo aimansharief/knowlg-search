@@ -24,7 +24,6 @@ find ./ -type f -name "logback.xml" -print0 | xargs -0 sed -i -e 's/\/data\/logs
 find ./ -type f -name "application.conf" -print0 | xargs -0 sed -i -e 's/\/data\//~\//g'
 find ./ -type f -name "*.java" -print0 | xargs -0 sed -i -e 's/\/data\//~\//g'
 
-#mvn scoverage:report
-#JAVA_REPORT_PATHS=`find /home/circleci/project  -iname jacoco.xml | awk 'BEGIN { RS = "" ; FS = "\n"; OFS = ","}{$1=$1; print $0}'`
-#mvn verify sonar:sonar -Dsonar.projectKey=Sunbird-Knowlg_knowlg-search -Dsonar.organization=sunbird-knowlg-1 -Dsonar.host.url=https://sonarcloud.io -Dsonar.coverage.exclusions=**/CustomProblemHandler.java -Dsonar.scala.coverage.reportPaths=/home/runner/work/knowlg-search/knowlg-search/search-api/target/scoverage.xml -Dsonar.coverage.jacoco.xmlReportPaths=${JAVA_REPORT_PATHS}
-mvn clean install
+mvn scoverage:report
+JAVA_REPORT_PATHS=`find /home/circleci/project  -iname jacoco.xml | awk 'BEGIN { RS = "" ; FS = "\n"; OFS = ","}{$1=$1; print $0}'`
+mvn verify sonar:sonar -Dsonar.projectKey=Sunbird-Knowlg_knowlg-search -Dsonar.organization=sunbird-knowlg-1 -Dsonar.host.url=https://sonarcloud.io -Dsonar.coverage.exclusions=**/CustomProblemHandler.java -Dsonar.scala.coverage.reportPaths=/home/runner/work/knowlg-search/knowlg-search/search-api/target/scoverage.xml -Dsonar.coverage.jacoco.xmlReportPaths=${JAVA_REPORT_PATHS}
