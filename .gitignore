@@ -1,4 +1,5 @@
+knowlg-search/.metals/metals.lock.db
+project
 .DS_Store
-**/target/**
-**/.idea/**
-**/*.iml
+.idea
+*.class
