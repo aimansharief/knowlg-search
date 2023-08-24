@@ -2,3 +2,4 @@
 ../project/target/config-classes
 **/.idea/**
 **/*.iml
+**/target/**
