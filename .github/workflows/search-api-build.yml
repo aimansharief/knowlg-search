@@ -1,0 +1,98 @@
+name: search api workflow
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: 14
+          distribution: 'adopt'
+          architecture: x64
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: kp-dependency-build-cache-${{ hashFiles('pom.xml') }}
+
+      - name: Build the project
+        run: |
+          cd search-api/
+          ls
+          mvn clean install -DskipTests
+
+      - name: Login to docker hub
+        uses: docker/login-action@v2
+        with:
+            username: ${{ vars.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build docker image and push
+        run: |
+          docker images
+          cd search-api/
+          sh knowlg-docker-image.sh ${{ github.ref_name }}
+          docker images
+          docker tag search-service:${{ github.ref_name }} ${{ vars.DOCKERHUB_USERNAME }}/search-service:${{ github.ref_name }}
+          docker push ${{ vars.DOCKERHUB_USERNAME }}/search-service:${{ github.ref_name }}
+
+      - name: Store Maven dependencies cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: kp-dependency-build-cache-${{ hashFiles('pom.xml') }}
+
+  unit-tests:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: 14
+          distribution: 'adopt'
+          architecture: x64
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: kp-dependency-test-cache-${{ hashFiles('pom.xml') }}
+
+      - name: Setup environment and run tests
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          cd search-api/
+          bash vmsetup.sh
+      - name: Save test results
+        run: |
+          mkdir -p ~/test-results/junit/
+          find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
+        if: always()
+
+      - name: Store Maven dependencies cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: kp-dependency-test-cache-${{ hashFiles('pom.xml') }}
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: ~/test-results
+

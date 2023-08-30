@@ -1,0 +1,5 @@
+.DS_Store
+../project/target/config-classes
+**/.idea/**
+**/*.iml
+**/target/**
