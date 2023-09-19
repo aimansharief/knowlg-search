@@ -49,6 +49,6 @@ lazy val searchService = (project in file("search-service"))
 lazy val commonSettings = Seq(
   javacOptions ++= Seq("-source", "11", "-target", "11"),
   crossPaths := false,
-  coverageEnabled := true,
+  coverageEnabled := false,
   resolvers ++= Seq("Local Maven Repository" at "file:///"+Path.userHome+"/.m2/repository")
 )
